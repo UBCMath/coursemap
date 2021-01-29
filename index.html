@@ -31,6 +31,16 @@
             .attr("cy", course => ycoord(course.y))
             .attr("fill","rgba(0,0,0,1)");
 
+          svg.selectAll("text")
+            .data(courses)
+            .join("text")
+            .attr("x", course => xcoord(course.x))
+            .attr("y", course => ycoord(course.y))
+            .attr("text-anchor", function(d) {
+                return d.x <= 0 ? "end" : "start";
+            })
+            .text(d => d.course_number);
+ 
           svg.selectAll("line")
             .data(requisites)
             .join("line")

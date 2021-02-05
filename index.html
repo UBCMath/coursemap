@@ -8,14 +8,13 @@
 </head>
 <style>
     .tooltip {
-        color: #4A22FF;
-        text-align: center;
-        padding: 1px;
+        color: #444;
+        padding: 5px;
         font: 14px sans-serif;
-        background: lightsteelblue;
-        border: 0px;
-        border-radius: 8px;
-        opacity: 0.9;
+        background: #dddddd;
+        border-radius: 3px;
+        opacity: 0.95;
+        box-shadow: 0 5px 5px 0 #8c0044;
     }
     
     .course_info {
@@ -81,7 +80,7 @@
 
 
                     var lines = svg.selectAll("line")
-                        .data(requisites);
+                        .data(requisites)
 
                     lines.join("line")
                         .attr("id", requisite => pre_line(requisite.course_number, requisite.requisite_number))
@@ -91,11 +90,11 @@
                         .attr("x2", requisite => xcoord(requisite.requisite_x))
                         .attr("y2", requisite => ycoord(requisite.requisite_y))
                         .attr("stroke", "rgba(0,0,0,0.2)")
-                        .style("opacity", 1);
+                        .attr("opacity", 1);
 
 
                     function showinfo(d) {
-                        d3.select(this).style("fill", "blue");
+                        d3.select(this).style("fill", "#8c0044");
                         var course_num = d3.select(this).attr('id');
                         var x = d3.select(this).attr('cx');
                         var y = d3.select(this).attr('cy');
@@ -113,10 +112,20 @@
                             .attr("y", y);
                         var div = fo.append("xhtml:div")
                             .append("div")
-                            .attr("class", "tooltip");
+                            .attr("class", "tooltip")
+                            .style("transform", function(d) {
+                                var str = "";
+                                if (Number(x) + 500 >= width) {
+                                    str = str + "translateX(-" + 100 * (Number(x) / width) + "%)";
+                                }
+                                if (Number(y) + 200 >= height) {
+                                    str = str + "translateY(-" + 100 * (Number(y) / height) + "%)";
+                                }
+                                return str;
+                            });
 
                         div.append("p")
-                            .html(text);
+                            .html("MATH" + course_num + "<br/><br/>" + text);
 
                         svg.selectAll(".pre_line")
                             .filter(function(d) {
@@ -125,7 +134,8 @@
                                 const pre = str.split('-')[1];
                                 return course == course_num;
                             })
-                            .attr("stroke", "blue");
+                            .attr("stroke", "#8c0044")
+                            .attr("stroke-width", 2);
 
                     }
 
@@ -146,7 +156,8 @@
                                 const pre = str.split('-')[1];
                                 return course == course_num
                             })
-                            .attr("stroke", "rgba(0,0,0,0.2)");
+                            .attr("stroke", "rgba(0,0,0,0.2)")
+                            .attr("stroke-width", 1);
 
 
                         svg.selectAll(".course_info")
@@ -155,7 +166,6 @@
                             })
                             .remove();
                     }
-
                 })
             })
         });

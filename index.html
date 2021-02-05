@@ -1,48 +1,165 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <title>UBC Mathematics Undergraduate Program</title>
-  </head>
-  <body>
+</head>
+<style>
+    .tooltip {
+        color: #4A22FF;
+        text-align: center;
+        padding: 1px;
+        font: 14px sans-serif;
+        background: lightsteelblue;
+        border: 0px;
+        border-radius: 8px;
+        opacity: 0.9;
+    }
+    
+    .course_info {
+        width: 350px;
+        height: auto;
+        pointer-events: none;
+        overflow: visible;
+    }
+</style>
+
+<body>
 
     <svg></svg>
 
     <script type="text/javascript">
+        d3.csv("data/LayoutCourses.csv").then(function(courses) {
+            d3.csv("data/LayoutRequisites.csv").then(function(requisites) {
+                d3.csv("https://assets.codepen.io/5386860/CoursesInfo.csv").then(function(coursesinfo) {
 
-      d3.csv("data/LayoutCourses.csv").then(function (courses) {
-        d3.csv("data/LayoutRequisites.csv").then(function (requisites) {
+                    var width = 1400,
+                        height = 700,
+                        scale = 70;
+                    var xcoord = x => x * scale + width / 2;
+                    var ycoord = y => height - 30 - y * scale;
+                    var pre_line = (a, b) => a + "-" + b;
 
-          var width = 1000, height = 500, scale = 50;
-          var xcoord = x => x*scale + width/2;
-          var ycoord = y => height - 30 - y*scale;
+                    var svg = d3.select("body")
+                        .append("svg")
+                        .attr("width", width)
+                        .attr("height", height)
+                        .style("border", "1px solid black");
 
-          var svg = d3.select("svg")
-                      .attr("width", width)
-                      .attr("height", height)
-                      .style("border","1px solid black");
+                    svg.selectAll("text")
+                        .data(coursesinfo)
+                        .join("text")
+                        .attr("id", coursesinfo => coursesinfo.number)
+                        .attr("class", "info")
+                        .text(coursesinfo => coursesinfo.description)
+                        .attr("visibility", "hidden");
 
-          svg.selectAll("circle")
-            .data(courses)
-            .join("circle")
-            .attr("r", 5)
-            .attr("cx", course => xcoord(course.x))
-            .attr("cy", course => ycoord(course.y))
-            .attr("fill","rgba(0,0,0,1)");
+                    var nodes = svg.selectAll("circle")
+                        .data(courses);
 
-          svg.selectAll("line")
-            .data(requisites)
-            .join("line")
-            .attr("x1", requisite => xcoord(requisite.course_x))
-            .attr("y1", requisite => ycoord(requisite.course_y))
-            .attr("x2", requisite => xcoord(requisite.requisite_x))
-            .attr("y2", requisite => ycoord(requisite.requisite_y))
-            .attr("stroke","rgba(0,0,0,0.2)");
+                    nodes.join("circle")
+                        .attr("id", course => course.course_number)
+                        .attr("class", "course")
+                        .attr("r", 6)
+                        .attr("cx", course => xcoord(course.x))
+                        .attr("cy", course => ycoord(course.y))
+                        .style("fill", "black")
+                        .on("mouseover", showinfo)
+                        .on("mouseout", hideinfo);
 
-        })
-      });
+                    nodes.join("text")
+                        .attr("class", "course_num")
+                        .attr("x", course => xcoord(course.x))
+                        .attr("y", course => ycoord(course.y) - 7)
+                        .attr("text-anchor", function(d) {
+                            if (d.x == 0) return "middle";
+                            else return d.x < 0 ? "end" : "start";
+                        })
+                        .text(d => d.course_number);
 
+
+                    var lines = svg.selectAll("line")
+                        .data(requisites);
+
+                    lines.join("line")
+                        .attr("id", requisite => pre_line(requisite.course_number, requisite.requisite_number))
+                        .attr("class", "pre_line")
+                        .attr("x1", requisite => xcoord(requisite.course_x))
+                        .attr("y1", requisite => ycoord(requisite.course_y))
+                        .attr("x2", requisite => xcoord(requisite.requisite_x))
+                        .attr("y2", requisite => ycoord(requisite.requisite_y))
+                        .attr("stroke", "rgba(0,0,0,0.2)")
+                        .style("opacity", 1);
+
+
+                    function showinfo(d) {
+                        d3.select(this).style("fill", "blue");
+                        var course_num = d3.select(this).attr('id');
+                        var x = d3.select(this).attr('cx');
+                        var y = d3.select(this).attr('cy');
+
+                        var text = svg.selectAll(".info")
+                            .filter(function(d) {
+                                return this.id == course_num
+                            })
+                            .text();
+
+                        var fo = svg.append("foreignObject")
+                            .attr("id", course_num)
+                            .attr("class", "course_info")
+                            .attr("x", x)
+                            .attr("y", y);
+                        var div = fo.append("xhtml:div")
+                            .append("div")
+                            .attr("class", "tooltip");
+
+                        div.append("p")
+                            .html(text);
+
+                        svg.selectAll(".pre_line")
+                            .filter(function(d) {
+                                var str = this.id;
+                                const course = str.split('-')[0];
+                                const pre = str.split('-')[1];
+                                return course == course_num;
+                            })
+                            .attr("stroke", "blue");
+
+                    }
+
+                    function hideinfo(d) {
+                        d3.select(this).style("fill", "black");
+                        var course_num = d3.select(this).attr('id');
+                        svg.selectAll(".info_box")
+                            .filter(function(d) {
+                                return this.id == course_num
+                            })
+                            .style("visibility", "hidden");
+
+
+                        svg.selectAll(".pre_line")
+                            .filter(function(d) {
+                                var str = d3.select(this).attr('id');
+                                const course = str.split('-')[0];
+                                const pre = str.split('-')[1];
+                                return course == course_num
+                            })
+                            .attr("stroke", "rgba(0,0,0,0.2)");
+
+
+                        svg.selectAll(".course_info")
+                            .filter(function(d) {
+                                return this.id == course_num
+                            })
+                            .remove();
+                    }
+
+                })
+            })
+        });
     </script>
-  </body>
+</body>
+
 </html>

@@ -11,8 +11,8 @@
 
     <script type="text/javascript">
 
-      d3.csv("data/LayoutCourses.csv").then(function (courses) {
-        d3.csv("data/LayoutRequisites.csv").then(function (requisites) {
+      d3.csv("data/csv/LayoutCourses.csv").then(function (courses) {
+        d3.csv("data/csv/LayoutRequisites.csv").then(function (requisites) {
 
           var width = 1000, height = 500, scale = 50;
           var xcoord = x => x*scale + width/2;
@@ -38,7 +38,7 @@
             .attr("y1", requisite => ycoord(requisite.course_y))
             .attr("x2", requisite => xcoord(requisite.requisite_x))
             .attr("y2", requisite => ycoord(requisite.requisite_y))
-            .attr("stroke","rgba(0,0,0,0.2)");
+            .attr("stroke","rgba(0,0,0,0.1)");
 
         })
       });

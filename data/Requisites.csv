@@ -1,0 +1,4 @@
+,id,course_number,type,description
+0,1,101,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184"
+1,2,103,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184"
+2,3,152,co,MATH 101

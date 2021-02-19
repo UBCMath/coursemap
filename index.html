@@ -1,48 +1,276 @@
 <!DOCTYPE html>
 <html>
-  <head>
+
+<head>
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <title>UBC Mathematics Undergraduate Program</title>
-  </head>
-  <body>
+</head>
+
+<body>
+    <style>
+        .course {
+            r: 15px;
+            fill: #EECDA3;
+            opacity: 0.8;
+            stroke: #8c0044;
+            stroke-width: 1px;
+        }
+        
+        .course-hover {
+            r: 15px;
+            fill: #8c0044;
+        }
+        
+        .course-click {
+            r: 15px;
+            fill: #8c0044;
+        }
+        
+        .course-program {
+            r: 15px;
+            fill: #4CAEAF;
+            stroke: #F5D76E;
+        }
+        
+        .pre_line {
+            stroke: rgba(0, 0, 0, 0.2);
+            stroke-width: 1px;
+        }
+        
+        .pre_line-hover {
+            stroke: #8c0044;
+            stroke-width: 2px;
+        }
+        
+        .pre_line-program {
+            stroke: #4CAEAF;
+            stroke-width: 2px;
+        }
+        
+        .pre_line-click {
+            stroke: #8c0044;
+            stroke-width: 2px;
+        }
+        
+        .course_info {
+            width: 350px;
+            height: auto;
+            overflow: visible;
+        }
+        
+        .tooltip {
+            color: #444;
+            padding: 5px;
+            font: 14px sans-serif;
+            background: #dddddd;
+            border-radius: 3px;
+            opacity: 0.95;
+            box-shadow: 0 5px 5px 0 #8c0044;
+        }
+    </style>
 
     <svg></svg>
 
     <script type="text/javascript">
+        Promise.all([
+            d3.csv("data/csv/LayoutCourses.csv"),
+            d3.csv("data/csv/LayoutRequisites.csv"),
+            d3.csv("data/csv/Courses.csv"),
+            d3.csv("data/csv/Tracks.csv"),
+            d3.csv("data/csv/CoursesTracks.csv"),
+            d3.csv("data/csv/Requisites.csv")
+        ]).then(function(files) {
+            const courses = files[0];
+            const requisites = files[1];
+            const coursesinfo = files[2];
+            const tracks = files[3];
+            const tracksinfo = files[4];
+            const reqinfo = files[5];
 
-      d3.csv("data/csv/LayoutCourses.csv").then(function (courses) {
-        d3.csv("data/csv/LayoutRequisites.csv").then(function (requisites) {
+            const width = 1400,
+                height = 700,
+                scale = 80;
+            var xcoord = x => x * scale + width / 2;
+            var ycoord = y => height - 30 - y * scale;
+            var pre_line = (a, b) => a + "-" + b;
 
-          var width = 1000, height = 500, scale = 50;
-          var xcoord = x => x*scale + width/2;
-          var ycoord = y => height - 30 - y*scale;
+            var svg = d3.select("body")
+                .append("svg")
+                .attr("width", width)
+                .attr("height", height)
+                .style("border", "1px solid black");
 
-          var svg = d3.select("svg")
-                      .attr("width", width)
-                      .attr("height", height)
-                      .style("border","1px solid black");
+            var lines = svg.selectAll("line")
+                .data(requisites)
 
-          svg.selectAll("circle")
-            .data(courses)
-            .join("circle")
-            .attr("r", 5)
-            .attr("cx", course => xcoord(course.x))
-            .attr("cy", course => ycoord(course.y))
-            .attr("fill","rgba(0,0,0,1)");
+            lines.join("line")
+                .attr("id", requisite => pre_line(requisite.course_number, requisite.requisite_number))
+                .attr("class", "pre_line")
+                .attr("x1", requisite => xcoord(requisite.course_x))
+                .attr("y1", requisite => ycoord(requisite.course_y))
+                .attr("x2", requisite => xcoord(requisite.requisite_x))
+                .attr("y2", requisite => ycoord(requisite.requisite_y));
 
-          svg.selectAll("line")
-            .data(requisites)
-            .join("line")
-            .attr("x1", requisite => xcoord(requisite.course_x))
-            .attr("y1", requisite => ycoord(requisite.course_y))
-            .attr("x2", requisite => xcoord(requisite.requisite_x))
-            .attr("y2", requisite => ycoord(requisite.requisite_y))
-            .attr("stroke","rgba(0,0,0,0.1)");
 
-        })
-      });
+            var nodes = svg.selectAll("circle")
+                .data(courses)
+                .join("g");
 
+            nodes.append("circle")
+                .attr("id", course => course.course_number)
+                .attr("class", "course")
+                .attr("cx", course => xcoord(course.x))
+                .attr("cy", course => ycoord(course.y))
+                .on("mouseover", showinfo)
+                .on("mouseout", hideinfo)
+                .on("click", clickcircle);
+
+            nodes.append("text")
+                .attr("id", course => course.course_number)
+                .attr("class", "course_num")
+                .attr("x", course => xcoord(course.x))
+                .attr("y", course => ycoord(course.y) + 5)
+                .attr("text-anchor", "middle")
+                .attr("font-size", 14)
+                .text(d => d.course_number)
+                .on("mouseover", showinfo)
+                .on("mouseout", hideinfo)
+                .on("click", clickcircle);
+
+            svg.append("text")
+                .attr("x", width - 200)
+                .attr("y", 40)
+                .attr("font-size", 14)
+                .text("Click a course to mark it.");
+
+            svg.append("polygon")
+                .attr("points", "0,9 5,0 10,9")
+                .attr("fill", "#BC1B3C")
+                .style("transform", "translate(" + (width - 215) + "px, 31px)");
+
+
+
+
+            function clickcircle(d) {
+                const course_num = d3.select(this).attr('id');
+
+                var c_status;
+                d3.selectAll(".course").each(function(d) {
+                    if (this.id == course_num) {
+                        c_status = d3.select(this).classed("course-click");
+                        d3.select(this).classed("course-click", !c_status);
+                    }
+                })
+
+                svg.selectAll(".pre_line")
+                    .each(function(d) {
+                        const str = this.id;
+                        const course = str.split('-')[0];
+                        const pre = str.split('-')[1];
+                        if (course != course_num) {
+                            return;
+                        }
+                        d3.select(this).classed("pre_line-click", !c_status);
+                    });
+            }
+
+
+            function showinfo(d) {
+                const course_num = d3.select(this).attr('id');
+                var x, y;
+                if (d3.select(this).classed('course')) {
+                    x = d3.select(this).attr('cx');
+                    y = d3.select(this).attr('cy');
+                } else {
+                    x = d3.select(this).attr('x');
+                    y = d3.select(this).attr('y') - 5;
+                }
+
+                d3.selectAll(".course").each(function(d) {
+                    if (this.id == course_num) {
+                        d3.select(this).classed("course-hover", true);
+                    }
+                })
+
+                var courseinfo = coursesinfo.find(function(c) {
+                    return c.number == course_num;
+                })
+                var name = courseinfo.title;
+                var description = courseinfo.description;
+
+                var fo = svg.append("foreignObject")
+                    .attr("id", course_num)
+                    .attr("class", "course_info")
+                    .attr("x", x)
+                    .attr("y", y);
+                var div = fo.append("xhtml:div")
+                    .append("div")
+                    .attr("class", "tooltip")
+                    .style("transform", function(d) {
+                        var str = "";
+                        if (Number(x) + 500 >= width) {
+                            str = str + "translateX(-" + 100 * (Number(x) / width) + "%)";
+                        }
+                        if (Number(y) + 200 >= height) {
+                            str = str + "translateY(-" + 100 * (Number(y) / height) + "%)";
+                        }
+                        return str;
+                    });
+
+                div.append("p")
+                    .html("MATH" + course_num + "&nbsp&nbsp&nbsp" + name + "<br/><br/>" + description);
+
+                var table = div.append("table")
+                    .attr("border", 1);
+
+                for (var key in reqinfo) {
+                    if (course_num == reqinfo[key].course_number) {
+                        var tr = table.append("tr")
+                        tr.append("th").style("font", "14px sans-serif").html(reqinfo[key].type);
+                        tr.append("th").style("font", "14px sans-serif").html(reqinfo[key].description);
+                    }
+                }
+                svg.selectAll(".pre_line")
+                    .filter(function(d) {
+                        const str = this.id;
+                        const course = str.split('-')[0];
+                        const pre = str.split('-')[1];
+                        return course == course_num;
+                    })
+                    .classed("pre_line-hover", true);
+
+            }
+
+            function hideinfo(d) {
+                const course_num = d3.select(this).attr('id');
+
+                d3.selectAll(".course").filter(function(d) {
+                        return this.id == course_num
+                    })
+                    .classed("course-hover", false);
+
+
+
+                svg.selectAll(".pre_line")
+                    .filter(function(d) {
+                        var str = d3.select(this).attr('id');
+                        const course = str.split('-')[0];
+                        const pre = str.split('-')[1];
+                        return course == course_num
+                    })
+                    .classed("pre_line-hover", false);;
+
+
+                svg.selectAll(".course_info")
+                    .filter(function(d) {
+                        return this.id == course_num
+                    })
+                    .remove();
+            }
+
+        });
     </script>
-  </body>
+</body>
+
 </html>

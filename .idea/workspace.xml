@@ -2,20 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cffb1804-637f-455e-b2cb-1899572e88aa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/.gitignore" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/coursemap.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/converter.py" beforeDir="false" afterPath="$PROJECT_DIR$/data/converter.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_Courses.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_CoursesExclusions.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_CoursesRequisites.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_Exclusions.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_LayoutCourses.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_LayoutRequisites.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_Requisites.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/data/csv_files/new_Tracks.csv" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Courses.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/CoursesExclusions.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/CoursesRequisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Exclusions.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/LayoutCourses.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/LayoutRequisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Requisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/Tracks.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/Courses.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/CoursesExclusions.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/CoursesRequisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/Exclusions.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/LayoutCourses.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/LayoutRequisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/Requisites.csv" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/data/csv_files/Tracks.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,7 +42,6 @@
     <property name="ASKED_SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -62,6 +68,9 @@
       <workItem from="1612504850645" duration="1347000" />
       <workItem from="1612776420878" duration="5130000" />
       <workItem from="1612852420616" duration="572000" />
+      <workItem from="1612853090798" duration="4888000" />
+      <workItem from="1612863640739" duration="4119000" />
+      <workItem from="1613142969240" duration="156000" />
     </task>
     <servers />
   </component>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+
 <html>
   <head>
     <meta charset="utf-8">
@@ -11,8 +11,8 @@
 
     <script type="text/javascript">
 
-      d3.csv("data/LayoutCourses.csv").then(function (courses) {
-        d3.csv("data/LayoutRequisites.csv").then(function (requisites) {
+      d3.csv("data/csv/LayoutCourses.csv").then(function (courses) {
+        d3.csv("data/csv/LayoutRequisites.csv").then(function (requisites) {
 
           var width = 1000, height = 500, scale = 50;
           var xcoord = x => x*scale + width/2;
@@ -22,6 +22,24 @@
                       .attr("width", width)
                       .attr("height", height)
                       .style("border","1px solid black");
+          var x_1 = xcoord(requisites[0].course_x);
+
+          function draw(context) {
+            context.moveTo(10, 10);
+            context.arcTo(100, 150, 300, 10, 40);
+            context.lineTo(10, 50); // draw an arc, the turtle ends up at ⟨194.4,108.5⟩
+            // draw straight line to ⟨300,10⟩
+            // etc.
+            return context; // not mandatory, but will make it easier to chain operations
+          }
+
+
+
+          var lineData = [[50,50],[100,50]];
+
+          var line = d3.line()
+                  .curve(d3.curveBasis);
+
 
           svg.selectAll("circle")
             .data(courses)
@@ -29,16 +47,53 @@
             .attr("r", 5)
             .attr("cx", course => xcoord(course.x))
             .attr("cy", course => ycoord(course.y))
-            .attr("fill","rgba(0,0,0,1)");
+            .attr("fill","rgb(0,0,0)");
 
-          svg.selectAll("line")
+          var link = d3.linkHorizontal().source(function (d) { return { x: d.x1, y: d.y1 }; })
+                  .target(function (d) { return { x: d.x2, y: d.y2 }; })
+                  .x(function(d) {
+                    console.log(d.x)
+                    return d.x;
+                  })
+                  .y(function(d) {
+                    console.log(d.y)
+                    return d.y;
+                  });
+          var arc = function(d) {
+            var dx = xcoord(d.requisite_x) - xcoord(d.course_x);
+            dy = ycoord(d.requisite_y) - ycoord(d.course_y);
+            dr = Math.sqrt(dx * dx + dy * dy);
+            return "M" + xcoord(d.course_x) + "," + ycoord(d.course_y) + "A" + dr + "," + dr +
+                    " 0 0,1 " + xcoord(d.requisite_x) + "," + ycoord(d.requisite_y);
+          }
+
+          var diagonal = d3.linkVertical()
+                  .source(function (d) { return { x: xcoord(d.course_x), y: ycoord(d.course_y) }; })
+                  .target(function (d) { return { x: xcoord(d.requisite_x), y: ycoord(d.requisite_y) }; })
+                  .x(function(d) {
+                    return d.x;
+                  })
+                  .y(function(d) {
+                    return d.y;
+                  });
+
+          svg.selectAll('path')
+                  .data(requisites)
+                  .join('path')
+                  .attr('class', 'link')
+                  .attr('d',arc)
+                  .attr("stroke","rgba(0,0,0,0.2)")
+                  .attr('stroke-width', 2)
+                  .attr('fill', 'none');
+
+          /*svg.selectAll("line")
             .data(requisites)
             .join("line")
             .attr("x1", requisite => xcoord(requisite.course_x))
             .attr("y1", requisite => ycoord(requisite.course_y))
             .attr("x2", requisite => xcoord(requisite.requisite_x))
             .attr("y2", requisite => ycoord(requisite.requisite_y))
-            .attr("stroke","rgba(0,0,0,0.2)");
+            .attr("stroke","rgba(0,0,0,0.2)");*/
 
         })
       });

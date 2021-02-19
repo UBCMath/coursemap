@@ -68,6 +68,48 @@
             opacity: 0.95;
             box-shadow: 0 5px 5px 0 #8c0044;
         }
+        
+        .drop_menu {
+            width: 250px;
+            height: auto;
+            overflow: visible;
+        }
+        
+        .drop_button {
+            padding: 1px 50px 1px 10px;
+            font: 14px sans-serif;
+            color: #FFFFFF;
+            font-weight: bold;
+            background: #FD746C;
+            border-radius: 3px;
+            opacity: 0.95;
+            box-shadow: 5px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        }
+        
+        .track_button {
+            height: 30px;
+            width: 250px;
+            rx: 2px;
+            ry: 2px;
+            stroke: rgba(0, 0, 0, 0.2);
+            fill: rgba(0, 0, 0, 0.2);
+            fill-opacity: 0.6;
+        }
+        
+        .track_button-tracking {
+            height: 30px;
+            width: 250px;
+            rx: 2px;
+            ry: 2px;
+            stroke: rgba(0, 0, 0, 0.2);
+            fill: rgba(0, 0, 0, 0.4);
+            fill-opacity: 1.0;
+        }
+        
+        .star {
+            transform: translate(275px, 40px) scale(0.8, 0.8);
+            fill: #FFFFFF;
+        }
     </style>
 
     <svg></svg>
@@ -114,8 +156,7 @@
 
 
             var nodes = svg.selectAll("circle")
-                .data(courses)
-                .join("g");
+                .data(courses).join("g");
 
             nodes.append("circle")
                 .attr("id", course => course.course_number)
@@ -149,7 +190,48 @@
                 .attr("fill", "#BC1B3C")
                 .style("transform", "translate(" + (width - 215) + "px, 31px)");
 
+            var g = svg.append("g");
+            var drop_menu = g.append("foreignObject")
+                .attr("class", "drop_menu")
+                .attr("x", 50)
+                .attr("y", 25)
+                .on("click", clickdropdown);
+            var menu_button = drop_menu.append("xhtml:div")
+                .append("div")
+                .attr("class", "drop_button");
+            menu_button.append("p")
+                .html("Track Your Interest Here!");
+            g.append("polygon")
+                .attr("class", "star")
+                .attr("points", "10,1 4,20 19,8 1,8 16,20")
+                .on("click", clickdropdown);
 
+            var track_button = svg.selectAll("rect")
+                .data(tracks).join("g");
+            track_button.append("rect")
+                .attr("id", t => t.id)
+                .attr("class", "track_button")
+                .attr("x", 50)
+                .attr("y", function(t) {
+                    return t.id * 30 + 40
+                })
+                .attr("visibility", "hidden")
+                .on("click", selecttrack);
+            track_button.append("text")
+                .attr("x", 50)
+                .attr("id", t => t.id)
+                .attr("class", "track_title")
+                .attr("y", function(t) {
+                    return t.id * 30 + 60
+                })
+                .attr("textLength", function(t) {
+                    var title = t.title;
+                    if (title.length >= 35) return "250";
+                    else return;
+                })
+                .text(d => d.title)
+                .attr("visibility", "hidden")
+                .on("click", selecttrack);
 
 
             function clickcircle(d) {
@@ -175,6 +257,68 @@
                     });
             }
 
+            function clickdropdown(d) {
+                d3.selectAll(".track_button")
+                    .each(function(d) {
+                        if (d3.select(this).attr("visibility") == "hidden") {
+                            d3.select(this).attr("visibility", "visible");
+                        } else {
+                            d3.select(this).attr("visibility", "hidden");
+                        };
+                    })
+                d3.selectAll(".track_title")
+                    .each(function(d) {
+                        if (d3.select(this).attr("visibility") == "hidden") {
+                            d3.select(this).attr("visibility", "visible");
+                        } else {
+                            d3.select(this).attr("visibility", "hidden");
+                        };
+                    })
+            }
+
+            function selecttrack(d) {
+                const track_id = d3.select(this).attr("id");
+                var t_status;
+                d3.selectAll(".track_button").each(function(d) {
+                    if (this.id == track_id) {
+                        t_status = d3.select(this).classed("track_button-tracking");
+                        d3.select(this).classed("track_button-tracking", !t_status);
+                    } else {
+                        d3.select(this).classed("track_button-tracking", false);
+                    }
+                })
+                if (d3.select(this).attr("visibility") == "visible") {
+                    var tracked_courses = tracksinfo.filter(tc => tc.track_id == track_id);
+                    svg.selectAll(".course")
+                        .each(function(d) {
+                            const c_id = this.id;
+                            for (var key in tracked_courses) {
+                                if (c_id == tracked_courses[key].course_number) {
+                                    d3.select(this).classed("course-program", !t_status);
+                                    return;
+                                }
+                            };
+                            if (d3.select(this).classed("course-program")) {
+                                d3.select(this).classed("course-program", false);
+                            }
+                        });
+                    svg.selectAll(".pre_line")
+                        .each(function(d) {
+                            const str = this.id;
+                            const course = str.split('-')[0];
+                            const pre = str.split('-')[1];
+                            for (var key in tracked_courses) {
+                                if (course == tracked_courses[key].course_number) {
+                                    d3.select(this).classed("pre_line-program", !t_status);
+                                    return;
+                                }
+                            }
+                            if (d3.select(this).classed("pre_line-program")) {
+                                d3.select(this).classed("pre_line-program", false);
+                            }
+                        });
+                };
+            }
 
             function showinfo(d) {
                 const course_num = d3.select(this).attr('id');
@@ -231,6 +375,7 @@
                         tr.append("th").style("font", "14px sans-serif").html(reqinfo[key].description);
                     }
                 }
+
                 svg.selectAll(".pre_line")
                     .filter(function(d) {
                         const str = this.id;
@@ -268,6 +413,7 @@
                     })
                     .remove();
             }
+
 
         });
     </script>

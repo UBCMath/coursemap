@@ -5,113 +5,10 @@
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v6.min.js"></script>
     <title>UBC Mathematics Undergraduate Program</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
-    <style>
-        .course {
-            r: 15px;
-            fill: #EECDA3;
-            opacity: 0.8;
-            stroke: #8c0044;
-            stroke-width: 1px;
-        }
-        
-        .course-hover {
-            r: 15px;
-            fill: #8c0044;
-        }
-        
-        .course-click {
-            r: 15px;
-            fill: #8c0044;
-        }
-        
-        .course-program {
-            r: 15px;
-            fill: #4CAEAF;
-            stroke: #F5D76E;
-        }
-        
-        .pre_line {
-            stroke: rgba(0, 0, 0, 0.2);
-            stroke-width: 1px;
-        }
-        
-        .pre_line-hover {
-            stroke: #8c0044;
-            stroke-width: 2px;
-        }
-        
-        .pre_line-program {
-            stroke: #4CAEAF;
-            stroke-width: 2px;
-        }
-        
-        .pre_line-click {
-            stroke: #8c0044;
-            stroke-width: 2px;
-        }
-        
-        .course_info {
-            width: 350px;
-            height: auto;
-            overflow: visible;
-        }
-        
-        .tooltip {
-            color: #444;
-            padding: 5px;
-            font: 14px sans-serif;
-            background: #dddddd;
-            border-radius: 3px;
-            opacity: 0.95;
-            box-shadow: 0 5px 5px 0 #8c0044;
-        }
-        
-        .drop_menu {
-            width: 250px;
-            height: auto;
-            overflow: visible;
-        }
-        
-        .drop_button {
-            padding: 1px 50px 1px 10px;
-            font: 14px sans-serif;
-            color: #FFFFFF;
-            font-weight: bold;
-            background: #FD746C;
-            border-radius: 3px;
-            opacity: 0.95;
-            box-shadow: 5px 0px 10px 0px rgba(0, 0, 0, 0.2);
-        }
-        
-        .track_button {
-            height: 30px;
-            width: 250px;
-            rx: 2px;
-            ry: 2px;
-            stroke: rgba(0, 0, 0, 0.2);
-            fill: rgba(0, 0, 0, 0.2);
-            fill-opacity: 0.6;
-        }
-        
-        .track_button-tracking {
-            height: 30px;
-            width: 250px;
-            rx: 2px;
-            ry: 2px;
-            stroke: rgba(0, 0, 0, 0.2);
-            fill: rgba(0, 0, 0, 0.4);
-            fill-opacity: 1.0;
-        }
-        
-        .star {
-            transform: translate(275px, 40px) scale(0.8, 0.8);
-            fill: #FFFFFF;
-        }
-    </style>
-
     <svg></svg>
 
     <script type="text/javascript">
@@ -133,222 +30,207 @@
             const width = 1400,
                 height = 700,
                 scale = 80;
-            var xcoord = x => x * scale + width / 2;
-            var ycoord = y => height - 30 - y * scale;
-            var pre_line = (a, b) => a + "-" + b;
+            var xcoord = (x) => x * scale + width / 2;
+            var ycoord = (y) => height - 30 - y * scale;
+            var pre_line = (req) => req.course_number + "-" + req.requisite_number;
 
-            var svg = d3.select("body")
+            // add lines
+            var svg = d3
+                .select("body")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .style("border", "1px solid black");
-
-            var lines = svg.selectAll("line")
-                .data(requisites)
-
-            lines.join("line")
-                .attr("id", requisite => pre_line(requisite.course_number, requisite.requisite_number))
+            var lines = svg
+                .append("g")
+                .attr("class", "lines")
+                .selectAll("line")
+                .data(requisites);
+            lines
+                .join("line")
+                .attr("id", (requisite) => pre_line(requisite))
                 .attr("class", "pre_line")
-                .attr("x1", requisite => xcoord(requisite.course_x))
-                .attr("y1", requisite => ycoord(requisite.course_y))
-                .attr("x2", requisite => xcoord(requisite.requisite_x))
-                .attr("y2", requisite => ycoord(requisite.requisite_y));
+                .attr("x1", (requisite) => xcoord(requisite.course_x))
+                .attr("data-x1", (requisite) => xcoord(requisite.course_x))
+                .attr("y1", (requisite) => ycoord(requisite.course_y))
+                .attr("data-y1", (requisite) => ycoord(requisite.course_y))
+                .attr("x2", (requisite) => xcoord(requisite.requisite_x))
+                .attr("data-x2", (requisite) => xcoord(requisite.requisite_x))
+                .attr("y2", (requisite) => ycoord(requisite.requisite_y))
+                .attr("data-y2", (requisite) => ycoord(requisite.requisite_y));
 
-
-            var nodes = svg.selectAll("circle")
-                .data(courses).join("g");
-
-            nodes.append("circle")
-                .attr("id", course => course.course_number)
-                .attr("class", "course")
-                .attr("cx", course => xcoord(course.x))
-                .attr("cy", course => ycoord(course.y))
-                .on("mouseover", showinfo)
-                .on("mouseout", hideinfo)
-                .on("click", clickcircle);
-
-            nodes.append("text")
-                .attr("id", course => course.course_number)
-                .attr("class", "course_num")
-                .attr("x", course => xcoord(course.x))
-                .attr("y", course => ycoord(course.y) + 5)
-                .attr("text-anchor", "middle")
-                .attr("font-size", 14)
-                .text(d => d.course_number)
-                .on("mouseover", showinfo)
-                .on("mouseout", hideinfo)
-                .on("click", clickcircle);
-
-            svg.append("text")
-                .attr("x", width - 200)
-                .attr("y", 40)
+            // add descriptions in the top-right
+            var notes = svg.append("g").attr("class", "notes");
+            var note1 = notes
+                .append("g")
+                .style("transform", "translate(" + (width - 215) + "px, 31px)");
+            note1
+                .append("polygon")
+                .attr("points", "0,9 5,0 10,9")
+                .attr("fill", "#BC1B3C");
+            note1
+                .append("text")
+                .attr("x", 15)
+                .attr("y", 10)
                 .attr("font-size", 14)
                 .text("Click a course to mark it.");
-
-            svg.append("polygon")
+            var note2 = notes
+                .append("g")
+                .style("transform", "translate(" + (width - 215) + "px, 51px)");
+            note2
+                .append("polygon")
                 .attr("points", "0,9 5,0 10,9")
-                .attr("fill", "#BC1B3C")
-                .style("transform", "translate(" + (width - 215) + "px, 31px)");
+                .attr("fill", "#BC1B3C");
+            var note2_text = note2
+                .append("text")
+                .attr("x", 15)
+                .attr("y", 10)
+                .attr("font-size", 14);
+            note2_text.append("tspan").text("Drag courses to make your own");
+            note2_text
+                .append("tspan")
+                .attr("x", 15)
+                .attr("dy", "1.2em")
+                .text("collection. Click");
+            note2_text.append("tspan").attr("x", 150).attr("dy", "0em").text("to reset.");
+            var reset_button = note2
+                .append("g")
+                .style("pointer-events", "all")
+                .on("click", resetdrag_1);
+            reset_button
+                .append("rect")
+                .attr("class", "reset_button")
+                .attr("x", 112)
+                .attr("y", 14);
+            reset_button
+                .append("text")
+                .attr("class", "reset_text")
+                .text("Here")
+                .attr("textLength", 25)
+                .attr("x", 117)
+                .attr("y", 26)
+                .style("font", "11px 	Arial")
+                .style("font-weight", "bold");
 
-            var g = svg.append("g");
-            var drop_menu = g.append("foreignObject")
+            // add track panel in the top-left
+            var g = svg
+                .append("g")
+                .style("pointer-events", "all")
+                .on("click", clickdropdown);
+            var drop_menu = g
+                .append("foreignObject")
                 .attr("class", "drop_menu")
                 .attr("x", 50)
-                .attr("y", 25)
-                .on("click", clickdropdown);
-            var menu_button = drop_menu.append("xhtml:div")
+                .attr("y", 25);
+            var menu_button = drop_menu
+                .append("xhtml:div")
                 .append("div")
                 .attr("class", "drop_button");
-            menu_button.append("p")
-                .html("Track Your Interest Here!");
+            menu_button.append("p").html("Track Your Interest Here!");
             g.append("polygon")
                 .attr("class", "star")
-                .attr("points", "10,1 4,20 19,8 1,8 16,20")
-                .on("click", clickdropdown);
-
-            var track_button = svg.selectAll("rect")
-                .data(tracks).join("g");
-            track_button.append("rect")
-                .attr("id", t => t.id)
+                .attr("points", "10,1 4,20 19,8 1,8 16,20");
+            var track_button = svg
+                .append("g")
+                .attr("class", "tracks")
+                .selectAll("rect")
+                .data(tracks)
+                .join("g")
+                .attr("class", "track_panel")
+                .attr("id", (t) => t.id)
+                .attr("visibility", "hidden")
+                .style("pointer-events", "all")
+                .on("click", selecttrack);
+            track_button
+                .append("rect")
+                .attr("id", (t) => t.id)
                 .attr("class", "track_button")
                 .attr("x", 50)
                 .attr("y", function(t) {
-                    return t.id * 30 + 40
-                })
-                .attr("visibility", "hidden")
-                .on("click", selecttrack);
-            track_button.append("text")
+                    return t.id * 30 + 40;
+                });
+            track_button
+                .append("text")
                 .attr("x", 50)
-                .attr("id", t => t.id)
+                .attr("id", (t) => t.id)
                 .attr("class", "track_title")
                 .attr("y", function(t) {
-                    return t.id * 30 + 60
+                    return t.id * 30 + 60;
                 })
                 .attr("textLength", function(t) {
                     var title = t.title;
                     if (title.length >= 35) return "250";
                     else return;
                 })
-                .text(d => d.title)
-                .attr("visibility", "hidden")
-                .on("click", selecttrack);
+                .text((d) => d.title);
+
+            // draw nodes
+            var nodes = svg
+                .append("g")
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(courses)
+                .join("g")
+                .attr("id", (course) => course.course_number)
+                .attr("class", "node")
+                .attr("moved", false)
+                .style("pointer-events", "all")
+                .on("mouseover", showinfo)
+                .on("mouseout", hideinfo)
+                .on("click", clickcircle)
+                .call(
+                    d3
+                    .drag()
+                    .on("start", clickcircle)
+                    .on("drag", dragcircle)
+                    .on("end", clickcircle)
+                );
+
+            nodes
+                .append("circle")
+                .attr("id", (course) => course.course_number)
+                .attr("class", "course")
+                .attr("cx", (course) => xcoord(course.x))
+                .attr("cy", (course) => ycoord(course.y));
+
+            nodes
+                .append("text")
+                .attr("id", (course) => course.course_number)
+                .attr("class", "course_num")
+                .attr("x", (course) => xcoord(course.x))
+                .attr("y", (course) => ycoord(course.y) + 5)
+                .attr("text-anchor", "middle")
+                .attr("font-size", 14)
+                .text((d) => d.course_number);
 
 
-            function clickcircle(d) {
-                const course_num = d3.select(this).attr('id');
-
-                var c_status;
-                d3.selectAll(".course").each(function(d) {
-                    if (this.id == course_num) {
-                        c_status = d3.select(this).classed("course-click");
-                        d3.select(this).classed("course-click", !c_status);
-                    }
-                })
-
-                svg.selectAll(".pre_line")
-                    .each(function(d) {
-                        const str = this.id;
-                        const course = str.split('-')[0];
-                        const pre = str.split('-')[1];
-                        if (course != course_num) {
-                            return;
-                        }
-                        d3.select(this).classed("pre_line-click", !c_status);
-                    });
-            }
-
-            function clickdropdown(d) {
-                d3.selectAll(".track_button")
-                    .each(function(d) {
-                        if (d3.select(this).attr("visibility") == "hidden") {
-                            d3.select(this).attr("visibility", "visible");
-                        } else {
-                            d3.select(this).attr("visibility", "hidden");
-                        };
-                    })
-                d3.selectAll(".track_title")
-                    .each(function(d) {
-                        if (d3.select(this).attr("visibility") == "hidden") {
-                            d3.select(this).attr("visibility", "visible");
-                        } else {
-                            d3.select(this).attr("visibility", "hidden");
-                        };
-                    })
-            }
-
-            function selecttrack(d) {
-                const track_id = d3.select(this).attr("id");
-                var t_status;
-                d3.selectAll(".track_button").each(function(d) {
-                    if (this.id == track_id) {
-                        t_status = d3.select(this).classed("track_button-tracking");
-                        d3.select(this).classed("track_button-tracking", !t_status);
-                    } else {
-                        d3.select(this).classed("track_button-tracking", false);
-                    }
-                })
-                if (d3.select(this).attr("visibility") == "visible") {
-                    var tracked_courses = tracksinfo.filter(tc => tc.track_id == track_id);
-                    svg.selectAll(".course")
-                        .each(function(d) {
-                            const c_id = this.id;
-                            for (var key in tracked_courses) {
-                                if (c_id == tracked_courses[key].course_number) {
-                                    d3.select(this).classed("course-program", !t_status);
-                                    return;
-                                }
-                            };
-                            if (d3.select(this).classed("course-program")) {
-                                d3.select(this).classed("course-program", false);
-                            }
-                        });
-                    svg.selectAll(".pre_line")
-                        .each(function(d) {
-                            const str = this.id;
-                            const course = str.split('-')[0];
-                            const pre = str.split('-')[1];
-                            for (var key in tracked_courses) {
-                                if (course == tracked_courses[key].course_number) {
-                                    d3.select(this).classed("pre_line-program", !t_status);
-                                    return;
-                                }
-                            }
-                            if (d3.select(this).classed("pre_line-program")) {
-                                d3.select(this).classed("pre_line-program", false);
-                            }
-                        });
-                };
-            }
-
+            // show course information on hover
             function showinfo(d) {
-                const course_num = d3.select(this).attr('id');
+                const course_num = d3.select(this).attr("id");
                 var x, y;
-                if (d3.select(this).classed('course')) {
-                    x = d3.select(this).attr('cx');
-                    y = d3.select(this).attr('cy');
-                } else {
-                    x = d3.select(this).attr('x');
-                    y = d3.select(this).attr('y') - 5;
-                }
 
-                d3.selectAll(".course").each(function(d) {
-                    if (this.id == course_num) {
-                        d3.select(this).classed("course-hover", true);
-                    }
-                })
+                svg.selectAll(".node").sort(function(a, b) {
+                    return a.course_number != course_num ? -1 : 1;
+                });
+                x = d3.select(this).select(".course").attr("cx");
+                y = d3.select(this).select(".course").attr("cy");
+                d3.select(this).select(".course").classed("course-hover", true);
 
                 var courseinfo = coursesinfo.find(function(c) {
                     return c.number == course_num;
-                })
+                });
                 var name = courseinfo.title;
                 var description = courseinfo.description;
 
-                var fo = svg.append("foreignObject")
+                var fo = d3
+                    .select(this)
+                    .append("foreignObject")
                     .attr("id", course_num)
                     .attr("class", "course_info")
                     .attr("x", x)
                     .attr("y", y);
-                var div = fo.append("xhtml:div")
+                var div = fo
+                    .append("xhtml:div")
                     .append("div")
                     .attr("class", "tooltip")
                     .style("transform", function(d) {
@@ -362,58 +244,212 @@
                         return str;
                     });
 
-                div.append("p")
-                    .html("MATH" + course_num + "&nbsp&nbsp&nbsp" + name + "<br/><br/>" + description);
+                div
+                    .append("p")
+                    .html(
+                        "MATH" +
+                        course_num +
+                        "&nbsp&nbsp&nbsp" +
+                        name +
+                        "<br/><br/>" +
+                        description
+                    );
 
-                var table = div.append("table")
-                    .attr("border", 1);
+                var table = div.append("table").attr("border", 1);
 
                 for (var key in reqinfo) {
                     if (course_num == reqinfo[key].course_number) {
-                        var tr = table.append("tr")
-                        tr.append("th").style("font", "14px sans-serif").html(reqinfo[key].type);
-                        tr.append("th").style("font", "14px sans-serif").html(reqinfo[key].description);
+                        var tr = table.append("tr");
+                        tr.append("th")
+                            .style("font", "14px sans-serif")
+                            .html(reqinfo[key].type);
+                        tr.append("th")
+                            .style("font", "14px sans-serif")
+                            .html(reqinfo[key].description);
                     }
                 }
 
-                svg.selectAll(".pre_line")
+                svg
+                    .selectAll(".pre_line")
                     .filter(function(d) {
                         const str = this.id;
-                        const course = str.split('-')[0];
-                        const pre = str.split('-')[1];
+                        const course = str.split("-")[0];
+                        const pre = str.split("-")[1];
                         return course == course_num;
                     })
                     .classed("pre_line-hover", true);
-
             }
 
             function hideinfo(d) {
-                const course_num = d3.select(this).attr('id');
+                const course_num = d3.select(this).attr("id");
 
-                d3.selectAll(".course").filter(function(d) {
-                        return this.id == course_num
+                d3.selectAll(".course")
+                    .filter(function(d) {
+                        return this.id == course_num;
                     })
                     .classed("course-hover", false);
 
-
-
-                svg.selectAll(".pre_line")
+                svg
+                    .selectAll(".pre_line")
                     .filter(function(d) {
-                        var str = d3.select(this).attr('id');
-                        const course = str.split('-')[0];
-                        const pre = str.split('-')[1];
-                        return course == course_num
+                        var str = d3.select(this).attr("id");
+                        const course = str.split("-")[0];
+                        const pre = str.split("-")[1];
+                        return course == course_num;
                     })
-                    .classed("pre_line-hover", false);;
+                    .classed("pre_line-hover", false);
 
-
-                svg.selectAll(".course_info")
+                svg
+                    .selectAll(".course_info")
                     .filter(function(d) {
-                        return this.id == course_num
+                        return this.id == course_num;
                     })
                     .remove();
             }
 
+            // click a course to mark it
+            function clickcircle(d) {
+                const course_num = d3.select(this).attr("id");
+
+                var c_status;
+                d3.select(this)
+                    .select(".course")
+                    .each(function(d) {
+                        c_status = d3.select(this).classed("course-click");
+                        d3.select(this).classed("course-click", !c_status);
+                    });
+
+                svg.selectAll(".pre_line").each(function(d) {
+                    const str = this.id;
+                    const course = str.split("-")[0];
+                    const pre = str.split("-")[1];
+                    if (course == course_num) {
+                        d3.select(this).classed("pre_line-click", !c_status);
+                    }
+                });
+            }
+
+            // drag courses
+            function dragcircle(event, d) {
+                const course_num = d3.select(this).attr("id");
+                d.x = event.x;
+                d.y = event.y;
+                d3.select(this)
+                    .raise()
+                    .attr("transform", (d) => "translate(" + [d.x, d.y] + ")");
+                d3.select(this).raise().attr("moved", true);
+                svg.selectAll(".pre_line").each(function() {
+                    const str = this.id;
+                    const course = str.split("-")[0];
+                    const pre = str.split("-")[1];
+                    if (course == course_num) {
+                        var x1_new = parseFloat(d3.select(this).attr("data-x1")) + d.x;
+                        var y1_new = parseFloat(d3.select(this).attr("data-y1")) + d.y;
+                        d3.select(this).attr("x1", x1_new);
+                        d3.select(this).attr("y1", y1_new);
+                    } else if (pre == course_num) {
+                        var x2_new = parseFloat(d3.select(this).attr("data-x2")) + d.x;
+                        var y2_new = parseFloat(d3.select(this).attr("data-y2")) + d.y;
+                        d3.select(this).attr("x2", x2_new);
+                        d3.select(this).attr("y2", y2_new);
+                    }
+                });
+            }
+
+            // reset dragging
+            function resetdrag_1(d) {
+                d3.select(this)
+                    .append("rect")
+                    .attr("class", "reset_stroke")
+                    .attr("x", 114)
+                    .attr("y", 16);
+                d3.select(this).select("text").style("fill", "#BC1B3C");
+                d3.selectAll(".node").each(function(d) {
+                    if (d3.select(this).attr("moved") == "true") {
+                        d3.select(this)
+                            .raise()
+                            .attr("transform", "");
+                        d3.select(this).raise().attr("moved", false);
+                        const course_num = d3.select(this).attr("id");
+                        svg.selectAll(".pre_line").each(function() {
+                            const str = this.id;
+                            const course = str.split("-")[0];
+                            const pre = str.split("-")[1];
+                            if (course == course_num) {
+                                var x1_new = parseFloat(d3.select(this).attr("data-x1"));
+                                var y1_new = parseFloat(d3.select(this).attr("data-y1"));
+                                d3.select(this).attr("x1", x1_new);
+                                d3.select(this).attr("y1", y1_new);
+                            } else if (pre == course_num) {
+                                var x2_new = parseFloat(d3.select(this).attr("data-x2"));
+                                var y2_new = parseFloat(d3.select(this).attr("data-y2"));
+                                d3.select(this).attr("x2", x2_new);
+                                d3.select(this).attr("y2", y2_new);
+                            }
+                        });
+                    }
+                })
+                setTimeout(resetdrag_2, 200);
+            }
+
+            function resetdrag_2() {
+                d3.select(".reset_stroke").remove();
+                d3.select(".reset_text").style("fill", "black");
+            }
+
+            // click drop menu to list interests
+            function clickdropdown(d) {
+                d3.selectAll(".track_panel").each(function(d) {
+                    if (d3.select(this).attr("visibility") == "hidden") {
+                        d3.select(this).attr("visibility", "visible");
+                    } else {
+                        d3.select(this).attr("visibility", "hidden");
+                    }
+                });
+            }
+
+            // track an interest
+            function selecttrack(d) {
+                const track_id = d3.select(this).attr("id");
+                var t_status;
+                d3.selectAll(".track_button").each(function(d) {
+                    if (this.id == track_id) {
+                        t_status = d3.select(this).classed("track_button-tracking");
+                        d3.select(this).classed("track_button-tracking", !t_status);
+                    } else {
+                        d3.select(this).classed("track_button-tracking", false);
+                    }
+                });
+                if (d3.select(this).attr("visibility") == "visible") {
+                    var tracked_courses = tracksinfo.filter((tc) => tc.track_id == track_id);
+                    svg.selectAll(".course").each(function(d) {
+                        const c_id = this.id;
+                        for (var key in tracked_courses) {
+                            if (c_id == tracked_courses[key].course_number) {
+                                d3.select(this).classed("course-program", !t_status);
+                                return;
+                            }
+                        }
+                        if (d3.select(this).classed("course-program")) {
+                            d3.select(this).classed("course-program", false);
+                        }
+                    });
+                    svg.selectAll(".pre_line").each(function(d) {
+                        const str = this.id;
+                        const course = str.split("-")[0];
+                        const pre = str.split("-")[1];
+                        for (var key in tracked_courses) {
+                            if (course == tracked_courses[key].course_number) {
+                                d3.select(this).classed("pre_line-program", !t_status);
+                                return;
+                            }
+                        }
+                        if (d3.select(this).classed("pre_line-program")) {
+                            d3.select(this).classed("pre_line-program", false);
+                        }
+                    });
+                }
+            }
 
         });
     </script>

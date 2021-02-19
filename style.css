@@ -1,0 +1,120 @@
+.course {
+    r: 15px;
+    fill: #EECDA3;
+    opacity: 0.8;
+    stroke: #8c0044;
+    stroke-width: 1px;
+}
+
+.course-hover {
+    r: 15px;
+    fill: #8c0044;
+}
+
+.course-click {
+    r: 15px;
+    fill: #8c0044;
+}
+
+.course-program {
+    r: 15px;
+    fill: #4CAEAF;
+    stroke: #F5D76E;
+}
+
+.pre_line {
+    stroke: rgba(0, 0, 0, 0.2);
+    stroke-width: 1px;
+}
+
+.pre_line-hover {
+    stroke: #8c0044;
+    stroke-width: 2px;
+}
+
+.pre_line-program {
+    stroke: #4CAEAF;
+    stroke-width: 2px;
+}
+
+.pre_line-click {
+    stroke: #8c0044;
+    stroke-width: 2px;
+}
+
+.course_info {
+    width: 350px;
+    height: auto;
+    overflow: visible;
+}
+
+.tooltip {
+    color: #444;
+    padding: 5px;
+    font: 14px sans-serif;
+    background: #dddddd;
+    border-radius: 3px;
+    opacity: 0.95;
+    box-shadow: 0 5px 5px 0 #8c0044;
+}
+
+.drop_menu {
+    width: 250px;
+    height: auto;
+    overflow: visible;
+}
+
+.drop_button {
+    padding: 1px 50px 1px 10px;
+    font: 14px sans-serif;
+    color: #FFFFFF;
+    font-weight: bold;
+    background: #FD746C;
+    border-radius: 3px;
+    opacity: 0.95;
+    box-shadow: 5px 0px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.track_button {
+    height: 30px;
+    width: 250px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.2);
+    fill: rgba(0, 0, 0, 0.2);
+    fill-opacity: 0.6;
+}
+
+.track_button-tracking {
+    height: 30px;
+    width: 250px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.2);
+    fill: rgba(0, 0, 0, 0.4);
+    fill-opacity: 1.0;
+}
+
+.star {
+    transform: translate(275px, 40px) scale(0.8, 0.8);
+    fill: #FFFFFF;
+}
+
+.reset_button {
+    height: 15px;
+    width: 35px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.4);
+    fill: white;
+}
+
+.reset_stroke {
+    height: 11px;
+    width: 31px;
+    rx: 1px;
+    ry: 1px;
+    stroke: #6E8CF5;
+    stroke-width: 2px;
+    fill-opacity: 0.1;
+}

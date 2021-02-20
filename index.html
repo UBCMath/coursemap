@@ -9,6 +9,7 @@
 </head>
 
 <body>
+    <div id="coursemap"></div>
     <svg></svg>
 
     <script type="text/javascript">
@@ -27,16 +28,16 @@
             const tracksinfo = files[4];
             const reqinfo = files[5];
 
-            const width = 1400,
-                height = 700,
-                scale = 80;
+            const width = 1200,
+                height = 600,
+                scale = 60;
             var xcoord = (x) => x * scale + width / 2;
             var ycoord = (y) => height - 30 - y * scale;
             var pre_line = (req) => req.course_number + "-" + req.requisite_number;
 
             // add lines
             var svg = d3
-                .select("body")
+                .select("#coursemap")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
@@ -126,7 +127,7 @@
                 .append("xhtml:div")
                 .append("div")
                 .attr("class", "drop_button");
-            menu_button.append("p").html("Track Your Interest Here!");
+            menu_button.append("p").style("font-size", "11px").html("Track Your Interest Here!");
             g.append("polygon")
                 .attr("class", "star")
                 .attr("points", "10,1 4,20 19,8 1,8 16,20");
@@ -147,19 +148,20 @@
                 .attr("class", "track_button")
                 .attr("x", 50)
                 .attr("y", function(t) {
-                    return t.id * 30 + 40;
+                    return t.id * 30 + 32;
                 });
             track_button
                 .append("text")
-                .attr("x", 50)
+                .attr("x", 55)
                 .attr("id", (t) => t.id)
                 .attr("class", "track_title")
                 .attr("y", function(t) {
-                    return t.id * 30 + 60;
+                    return t.id * 30 + 50;
                 })
+                .style("font-size", "11px")
                 .attr("textLength", function(t) {
                     var title = t.title;
-                    if (title.length >= 35) return "250";
+                    if (title.length >= 35) return "190";
                     else return;
                 })
                 .text((d) => d.title);
@@ -198,9 +200,9 @@
                 .attr("id", (course) => course.course_number)
                 .attr("class", "course_num")
                 .attr("x", (course) => xcoord(course.x))
-                .attr("y", (course) => ycoord(course.y) + 5)
+                .attr("y", (course) => ycoord(course.y) + 2.5)
                 .attr("text-anchor", "middle")
-                .attr("font-size", 14)
+                .attr("font-size", 9)
                 .text((d) => d.course_number);
 
 
@@ -209,9 +211,6 @@
                 const course_num = d3.select(this).attr("id");
                 var x, y;
 
-                svg.selectAll(".node").sort(function(a, b) {
-                    return a.course_number != course_num ? -1 : 1;
-                });
                 x = d3.select(this).select(".course").attr("cx");
                 y = d3.select(this).select(".course").attr("cy");
                 d3.select(this).select(".course").classed("course-hover", true);
@@ -222,17 +221,11 @@
                 var name = courseinfo.title;
                 var description = courseinfo.description;
 
-                var fo = d3
-                    .select(this)
-                    .append("foreignObject")
+                var div = d3.select("#coursemap").append("div")
                     .attr("id", course_num)
-                    .attr("class", "course_info")
-                    .attr("x", x)
-                    .attr("y", y);
-                var div = fo
-                    .append("xhtml:div")
-                    .append("div")
                     .attr("class", "tooltip")
+                    .style("left", x + "px")
+                    .style("top", y + "px")
                     .style("transform", function(d) {
                         var str = "";
                         if (Number(x) + 500 >= width) {
@@ -299,8 +292,8 @@
                     })
                     .classed("pre_line-hover", false);
 
-                svg
-                    .selectAll(".course_info")
+                d3.select("#coursemap")
+                    .selectAll(".tooltip")
                     .filter(function(d) {
                         return this.id == course_num;
                     })

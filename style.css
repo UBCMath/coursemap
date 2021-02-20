@@ -1,5 +1,5 @@
 .course {
-    r: 15px;
+    r: 9px;
     fill: #EECDA3;
     opacity: 0.8;
     stroke: #8c0044;
@@ -7,17 +7,17 @@
 }
 
 .course-hover {
-    r: 15px;
+    r: 9px;
     fill: #8c0044;
 }
 
 .course-click {
-    r: 15px;
+    r: 9px;
     fill: #8c0044;
 }
 
 .course-program {
-    r: 15px;
+    r: 9px;
     fill: #4CAEAF;
     stroke: #F5D76E;
 }
@@ -42,13 +42,9 @@
     stroke-width: 2px;
 }
 
-.course_info {
-    width: 350px;
-    height: auto;
-    overflow: visible;
-}
-
 .tooltip {
+    position: absolute;
+    width: 350px;
     color: #444;
     padding: 5px;
     font: 14px sans-serif;
@@ -59,7 +55,7 @@
 }
 
 .drop_menu {
-    width: 250px;
+    width: 200px;
     height: auto;
     overflow: visible;
 }
@@ -77,7 +73,7 @@
 
 .track_button {
     height: 30px;
-    width: 250px;
+    width: 200px;
     rx: 2px;
     ry: 2px;
     stroke: rgba(0, 0, 0, 0.2);
@@ -87,7 +83,7 @@
 
 .track_button-tracking {
     height: 30px;
-    width: 250px;
+    width: 200px;
     rx: 2px;
     ry: 2px;
     stroke: rgba(0, 0, 0, 0.2);
@@ -96,7 +92,7 @@
 }
 
 .star {
-    transform: translate(275px, 40px) scale(0.8, 0.8);
+    transform: translate(225px, 35px) scale(0.7, 0.7);
     fill: #FFFFFF;
 }
 

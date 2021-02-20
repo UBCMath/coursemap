@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 <head>
   <meta charset="utf-8">
   <script src="https://d3js.org/d3.v6.min.js"></script>
@@ -109,4 +108,54 @@
   });
   </script>
 </body>
+=======
+  <head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <title>UBC Mathematics Undergraduate Program</title>
+  </head>
+  <body>
+
+    <svg></svg>
+
+    <script type="text/javascript">
+
+    Promise.all([
+      d3.csv("data/csv/LayoutCourses.csv"),
+      d3.csv("data/csv/LayoutRequisites.csv")
+    ]).then(function(files) {
+      const courses = files[0];
+      const requisites = files[1];
+
+      var width = 1000, height = 500, scale = 50;
+      var xcoord = x => x*scale + width/2;
+      var ycoord = y => height - 30 - y*scale;
+
+      var svg = d3.select("svg");
+
+      svg.attr("width", width)
+        .attr("height", height)
+        .style("border","1px solid black");
+
+      svg.selectAll("circle")
+        .data(courses)
+        .join("circle")
+        .attr("r", 5)
+        .attr("cx", course => xcoord(course.x))
+        .attr("cy", course => ycoord(course.y))
+        .attr("fill","rgba(0,0,0,1)");
+
+      svg.selectAll("line")
+        .data(requisites)
+        .join("line")
+        .attr("x1", requisite => xcoord(requisite.course_x))
+        .attr("y1", requisite => ycoord(requisite.course_y))
+        .attr("x2", requisite => xcoord(requisite.requisite_x))
+        .attr("y2", requisite => ycoord(requisite.requisite_y))
+        .attr("stroke","rgba(0,0,0,0.1)");
+
+      });
+
+    </script>
+  </body>
 </html>

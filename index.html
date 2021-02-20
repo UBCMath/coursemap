@@ -1,5 +1,114 @@
 <!DOCTYPE html>
 <html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
+  <title>UBC Mathematics Undergraduate Program</title>
+</head>
+
+<body>
+
+  <div id="coursemap"></div>
+
+  <script type="text/javascript">
+
+  Promise.all([
+    d3.csv("data/csv/LayoutCourses.csv"),
+    d3.csv("data/csv/LayoutRequisites.csv"),
+    d3.csv("data/csv/Courses.csv")
+  ]).then(function(files) {
+
+    const courses = files[0];
+    const requisites = files[1];
+    const coursesInfo = files[2];
+
+    var width = 1200, height = 600, scale = 60;
+    var xcoord = x => x * scale + width / 2;
+    var ycoord = y => height - 50 - y * scale;
+
+    var svg = d3.select("#coursemap").append("svg");
+
+    svg.attr("width", width)
+      .attr("height", height)
+      .style("border","1px solid black");
+
+    svg.append("g")
+      .selectAll("line")
+      .data(requisites)
+      .join("line")
+      .attr("x1", requisite => xcoord(requisite.course_x))
+      .attr("y1", requisite => ycoord(requisite.course_y))
+      .attr("x2", requisite => xcoord(requisite.requisite_x))
+      .attr("y2", requisite => ycoord(requisite.requisite_y))
+      .attr("stroke","rgba(0,0,0,0.1)");
+
+    svg.append("g")
+      .selectAll("circle")
+      .data(courses)
+      .join("circle")
+      .attr("r", 9)
+      .attr("cx", course => xcoord(course.x))
+      .attr("cy", course => ycoord(course.y))
+      .attr("fill","white")
+      .attr("stroke","black");
+
+    svg.append("g")
+      .selectAll("text")
+      .data(courses)
+      .join("text")
+      .attr("x", course => xcoord(course.x))
+      .attr("y", course => ycoord(course.y))
+      .attr("text-anchor","middle")
+      .attr("dy","2.5px")
+      .attr("font-color","black")
+      .attr("font-family","Arial")
+      .attr("font-size", 8)
+      .text(d => d.course_number);
+
+    svg.append("g")
+      .selectAll("circle")
+      .data(courses)
+      .join("circle")
+      .attr("r", 9)
+      .attr("cx", course => xcoord(course.x))
+      .attr("cy", course => ycoord(course.y))
+      .style("opacity","0")
+      .on("mouseover", showCourseInfo)
+      .on("mouseout", hideCourseInfo);
+
+    var courseInfoDiv = d3.select("#coursemap").append("div");
+
+    courseInfoDiv.style("position","absolute")
+      .style("font-family","Arial")
+      .style("font-size","12px")
+      .style("width", width/4 + "px")
+      .style("border","1px solid black")
+      .style("border-radius","2px")
+      .style("background-color","white")
+      .style("padding","10px")
+      .style("display","none");
+
+    var courseInfoTemplate = _.template("<strong>MATH <%= number %> <%= title %></strong><br><br> <%= description %>");
+
+    function showCourseInfo (event,course) {
+      var courseInfo = coursesInfo.find(d => d.number == course.course_number)
+      var x = xcoord(course.x) + 30;
+      var y = ycoord(course.y);
+      courseInfoDiv.style("left", x + "px")
+        .style("top", y + "px")
+        .style("display","block")
+        .html(courseInfoTemplate(courseInfo));
+    };
+
+    function hideCourseInfo (event,course) {
+      courseInfoDiv.style("display","none");
+    };
+
+  });
+  </script>
+</body>
+=======
   <head>
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v6.min.js"></script>

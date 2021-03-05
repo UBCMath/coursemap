@@ -3,30 +3,20 @@ function dragcircle(event, d) {
     const course_num = d.attr("id");
     var x = event.x;
     var y = event.y;
-    d.raise()
-        .attr("transform", (d) => "translate(" + [x, y] + ")");
+    var cx_new = parseFloat(d.attr("data-cx")) + x;
+    var cy_new = parseFloat(d.attr("data-cy")) + y;
+    d.select(".course").attr("cx", cx_new);
+    d.select(".course").attr("cy", cy_new);
+    d.select(".course_num").attr("x", cx_new);
+    d.select(".course_num").attr("y", cy_new + 2.5);
     d.raise().attr("moved", true);
-    d3.select("#coursemap").select("svg").selectAll(".pre_line").each(function() {
-        const str = this.id;
-        const course = str.split("-")[0];
-        const pre = str.split("-")[1];
-        if (course == course_num) {
-            var x1_new = parseFloat(d3.select(this).attr("data-x1")) + x;
-            var y1_new = parseFloat(d3.select(this).attr("data-y1")) + y;
-            d3.select(this).attr("x1", x1_new);
-            d3.select(this).attr("y1", y1_new);
-        } else if (pre == course_num) {
-            var x2_new = parseFloat(d3.select(this).attr("data-x2")) + x;
-            var y2_new = parseFloat(d3.select(this).attr("data-y2")) + y;
-            d3.select(this).attr("x2", x2_new);
-            d3.select(this).attr("y2", y2_new);
-        }
-    });
+    updateLinesPos(course_num, cx_new, cy_new);
+
 }
 
 // following two methods are for reset button
 // reset dragging
-function resetdrag_1(d) {
+function resetdrag_1(d, exclusions) {
     d.append("rect")
         .attr("class", "reset_stroke")
         .attr("x", 114)
@@ -34,29 +24,23 @@ function resetdrag_1(d) {
     d.select("text").style("fill", "#BC1B3C");
     d3.selectAll(".node").each(function(d) {
         if (d3.select(this).attr("moved") == "true") {
-            d3.select(this)
-                .raise()
-                .attr("transform", "");
+            var cx_new = parseFloat(d3.select(this).attr("data-cx"));
+            var cy_new = parseFloat(d3.select(this).attr("data-cy"));
+            d3.select(this).select(".course").attr("cx", cx_new);
+            d3.select(this).select(".course").attr("cy", cy_new);
+            d3.select(this).select(".course_num").attr("x", cx_new);
+            d3.select(this).select(".course_num").attr("y", cy_new + 2.5);
             d3.select(this).raise().attr("moved", false);
-            const course_num = d3.select(this).attr("id");
-            d3.select("#coursemap").select("svg").selectAll(".pre_line").each(function() {
-                const str = this.id;
-                const course = str.split("-")[0];
-                const pre = str.split("-")[1];
-                if (course == course_num) {
-                    var x1_new = parseFloat(d3.select(this).attr("data-x1"));
-                    var y1_new = parseFloat(d3.select(this).attr("data-y1"));
-                    d3.select(this).attr("x1", x1_new);
-                    d3.select(this).attr("y1", y1_new);
-                } else if (pre == course_num) {
-                    var x2_new = parseFloat(d3.select(this).attr("data-x2"));
-                    var y2_new = parseFloat(d3.select(this).attr("data-y2"));
-                    d3.select(this).attr("x2", x2_new);
-                    d3.select(this).attr("y2", y2_new);
-                }
-            });
         }
-    })
+    });
+    d3.selectAll(".exc").each(function(d) {
+        const exc_id = d3.select(this).attr("id");
+        var course_nums = exclusions.filter(function(c) {
+            return c.exclusion_id == exc_id;
+        }).map((a) => a.course_number);
+        expand_lines(d3.select(this), course_nums);
+    });
+    updateLinesPos();
     setTimeout(resetdrag_2, 200);
 }
 

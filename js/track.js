@@ -38,7 +38,6 @@ function selecttrack(d, tracksinfo) {
         d3.select("#coursemap").select("svg").selectAll(".pre_line").each(function(d) {
             const str = this.id;
             const course = str.split("-")[0];
-            const pre = str.split("-")[1];
             for (var key in tracked_courses) {
                 if (course == tracked_courses[key].course_number) {
                     d3.select(this).classed("pre_line-program", !t_status);

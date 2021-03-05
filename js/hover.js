@@ -50,7 +50,6 @@ function showinfo(event, d, coursesinfo, reqinfo) {
         .filter(function(d) {
             const str = this.id;
             const course = str.split("-")[0];
-            const pre = str.split("-")[1];
             return course == course_num;
         })
         .classed("pre_line-hover", true);
@@ -71,7 +70,6 @@ function hideinfo(d) {
         .filter(function(d) {
             var str = d3.select(this).attr("id");
             const course = str.split("-")[0];
-            const pre = str.split("-")[1];
             return course == course_num;
         })
         .classed("pre_line-hover", false);

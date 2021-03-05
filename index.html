@@ -54,15 +54,9 @@
             lines
                 .join("line")
                 .attr("id", (requisite) => pre_line(requisite))
-                .attr("class", "pre_line")
-                .attr("x1", (requisite) => xcoord(requisite.course_x))
-                .attr("data-x1", (requisite) => xcoord(requisite.course_x))
-                .attr("y1", (requisite) => ycoord(requisite.course_y))
-                .attr("data-y1", (requisite) => ycoord(requisite.course_y))
-                .attr("x2", (requisite) => xcoord(requisite.requisite_x))
-                .attr("data-x2", (requisite) => xcoord(requisite.requisite_x))
-                .attr("y2", (requisite) => ycoord(requisite.requisite_y))
-                .attr("data-y2", (requisite) => ycoord(requisite.requisite_y));
+                .attr("course", (requisite) => requisite.course_number)
+                .attr("pre", (requisite) => requisite.requisite_number)
+                .attr("class", "pre_line");
 
             // add descriptions in the top-right
             var notes = svg.append("g").attr("class", "notes");
@@ -104,7 +98,7 @@
                 .append("g")
                 .style("pointer-events", "all")
                 .on("click", function() {
-                    resetdrag_1(d3.select(this));
+                    resetdrag_1(d3.select(this), exclusions);
                 });
             reset_button
                 .append("rect")
@@ -188,6 +182,8 @@
                 .attr("id", (course) => course.course_number)
                 .attr("class", "node")
                 .attr("moved", false)
+                .attr("data-cx", (course) => xcoord(course.x))
+                .attr("data-cy", (course) => ycoord(course.y))
                 .style("pointer-events", "all")
                 .on("mouseover", function(event, d) {
                     showinfo(event, d3.select(this), coursesinfo, reqinfo)
@@ -237,14 +233,118 @@
                 .attr("class", "tooltip")
                 .style("display", "none");
 
+            // draw exclusion
+            var nodes_exc = svg
+                .append("g")
+                .attr("class", "exclusions")
+                .selectAll("g")
+                .data(exclusionsinfo)
+                .join("g")
+                .attr("id", (exc) => exc.id)
+                .attr("class", "exc")
+                .style("display", "none")
+                .attr("expanded", false)
+                .style("pointer-events", "all")
+                .on("click", function(event, d) {
+                    expand_exc(event, d3.select(this), exclusions);
+                });
 
+            nodes_exc
+                .append("circle")
+                .attr("id", (exc) => exc.id)
+                .attr("class", "exc_circle");
+            nodes_exc
+                .append("text")
+                .attr("id", (exc) => exc.id)
+                .attr("text-anchor", "middle")
+                .attr("font-size", 11)
+                .text((exc) => exc.id);
+
+            nodes_exc.each(function(d) {
+                var node = d3.select(this);
+                const exc_id = node.attr("id");
+                var exc_courses = exclusions.filter(function(c) {
+                    return c.exclusion_id == exc_id;
+                });
+                var x = 0;
+                var y = 0;
+                var count = 0;
+                var course_nums = exc_courses.map((a) => a.course_number);
+                course_nums.forEach((num, i) => {
+                    nodes
+                        .filter(function(d) {
+                            return this.id == num;
+                        })
+                        .each(function(d) {
+                            count += 1;
+                            x += Number(d3.select(this).select("circle").attr("cx"));
+                            y += Number(d3.select(this).select("circle").attr("cy"));
+                            d3.select(this).attr("display", "none");
+                        });
+                });
+                if (count == 0) {
+                    return;
+                }
+                x = x / count;
+                y = y / count;
+                node.style("display", "block");
+                node.select("circle").attr("cx", x).attr("cy", y);
+                node
+                    .select("text")
+                    .attr("x", x)
+                    .attr("y", y + 3);
+                expand_lines(node, course_nums);
+            });
+            updateLinesPos()
 
         });
+
+        function updateLinesPos(c_num, x, y) {
+            d3.selectAll(".pre_line")
+                .each(function() {
+                    const course = d3.select(this).attr("course");
+                    const pre = d3.select(this).attr("pre");
+                    var line = d3.select(this);
+                    if (typeof c_num !== "undefined") {
+                        if (course == c_num) {
+                            line.attr("x1", x);
+                            line.attr("y1", y);
+                        } else if (pre == c_num) {
+                            line.attr("x2", x);
+                            line.attr("y2", y);
+                        }
+                    } else {
+                        // if no specific course is assigned, update all lines for all courses
+                        // check exclusions first
+                        d3.selectAll(".exc_circle").each(function(d) {
+                            const c_id = d3.select(this).attr("id");
+                            if (course == c_id) {
+                                line.attr("x1", d3.select(this).attr("cx"));
+                                line.attr("y1", d3.select(this).attr("cy"));
+                            } else if (pre == c_id) {
+                                line.attr("x2", d3.select(this).attr("cx"));
+                                line.attr("y2", d3.select(this).attr("cy"));
+                            }
+                        });
+                        d3.selectAll(".course").each(function(d) {
+                            const c_id = d3.select(this).attr("id");
+                            if (course == c_id) {
+                                line.attr("x1", d3.select(this).attr("cx"));
+                                line.attr("y1", d3.select(this).attr("cy"));
+                            } else if (pre == c_id) {
+                                line.attr("x2", d3.select(this).attr("cx"));
+                                line.attr("y2", d3.select(this).attr("cy"));
+                            }
+                        });
+                    }
+                });
+        }
     </script>
     <script src="js/track.js"></script>
     <script src="js/drag.js"></script>
     <script src="js/hover.js"></script>
     <script src="js/click.js"></script>
+    <script src="js/exc_operation.js"></script>
 </body>
 
 </html>

@@ -19,8 +19,8 @@ function dragcircle(event, d) {
 function resetdrag_1(d, exclusions) {
     d.append("rect")
         .attr("class", "reset_stroke")
-        .attr("x", 114)
-        .attr("y", 16);
+        .attr("x", 160)
+        .attr("y", 18);
     d.select("text").style("fill", "#BC1B3C");
     d3.selectAll(".node").each(function(d) {
         if (d3.select(this).attr("moved") == "true") {

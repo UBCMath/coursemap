@@ -35,10 +35,13 @@
 
 
 
-          var lineData = [[50,50],[100,50]];
 
-          var line = d3.line()
-                  .curve(d3.curveBasis);
+        /*.append("line")          // attach a line
+                  .style("stroke", "black")  // colour the line
+                  .attr("x1", 500)     // x position of the first end of the line
+                  .attr("y1", 470)      // y position of the first end of the line
+                  .attr("x2", 300)     // x position of the second end of the line
+                  .attr("y2", 150);*/
 
 
           svg.selectAll("circle")
@@ -59,6 +62,7 @@
                     console.log(d.y)
                     return d.y;
                   });
+                  
           var arc = function(d) {
             var dx = xcoord(d.requisite_x) - xcoord(d.course_x);
             dy = ycoord(d.requisite_y) - ycoord(d.course_y);
@@ -67,7 +71,8 @@
                     " 0 0,1 " + xcoord(d.requisite_x) + "," + ycoord(d.requisite_y);
           }
 
-          var diagonal = d3.linkVertical()
+
+          var diagonal = d3.linkHorizontal()
                   .source(function (d) { return { x: xcoord(d.course_x), y: ycoord(d.course_y) }; })
                   .target(function (d) { return { x: xcoord(d.requisite_x), y: ycoord(d.requisite_y) }; })
                   .x(function(d) {
@@ -76,15 +81,78 @@
                   .y(function(d) {
                     return d.y;
                   });
+          console.log(courses)
 
-          svg.selectAll('path')
-                  .data(requisites)
+          var link = d3.linkRadial()
+                  .angle(function(d) { return d.x; })
+                  .radius(function(d) { return d.y; });
+          /*svg.append("path")
+                  .attr("d", link(courses))
+                  .attr('transform', 'translate(' + 150 + ',' + 150 + ')')
+                  .style("fill", "none")
+                  .style("stroke", "darkslateblue")
+                  .style("stroke-width", "4px");*/
+          var data = {
+            source: {
+              x: null,
+              y: null
+            },
+            target: {
+              x: null,
+              y: null
+            }}
+          /*console.log(data.source.x);
+            console.log(data.source.y);
+          console.log(data.target.x);
+          console.log(data.target.y);
+          svg.append("path")
+                  .attr("d", link(data))
+                  .attr('transform', 'translate(' + xcoord(-2) + ',' + ycoord(1) + ')')
+                  .style("fill", "none")
+                  .style("stroke", "darkslateblue")
+                  .style("stroke-width", "4px");*/
+
+
+         var adjust = x => {
+           var n = x/30 * Math.PI;
+           console.log(n);
+           if (n <= Math.PI/2) {
+             return (Math.PI/2)-n;}
+           else{
+               return Math.PI -n + (3/2 * Math.PI);
+             }
+           }
+
+
+          for (i = 0; i < 300 ; i++) {
+            for (j = 0; j < courses.length; j++){
+              if (courses[j].course_number ==  requisites[i].requisite_number){
+                 data.source.x = adjust(courses[j].theta);
+                 data.source.y = (courses[j].r)*50;
+               }
+              if (courses[j].course_number ==  requisites[i].course_number){
+                data.target.x = adjust(courses[j].theta);
+                ;
+                data.target.y = (courses[j].r)*50;
+              }}
+              //console.log(data.source.x);
+              //console.log(data.target.x);
+                      svg.append("path")
+                    .attr("d", link(data))
+                    .attr('transform', 'translate(' + 500 + ',' + 470 + ')')
+                    .style("fill", "none")
+                    .style("stroke", "darkslateblue")
+                    .style("stroke-width", 2);
+          }
+
+          /*svg.selectAll('path')
+                  .data([requisites[0],requisites[1],requisites[2]])
                   .join('path')
                   .attr('class', 'link')
-                  .attr('d',arc)
+                  .attr('d',diagonal)
                   .attr("stroke","rgba(0,0,0,0.2)")
                   .attr('stroke-width', 2)
-                  .attr('fill', 'none');
+                  .attr('fill', 'none');*/
 
           /*svg.selectAll("line")
             .data(requisites)

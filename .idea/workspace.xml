@@ -2,26 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="cffb1804-637f-455e-b2cb-1899572e88aa" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/coursemap.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Courses.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/CoursesExclusions.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/CoursesRequisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Exclusions.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/LayoutCourses.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/LayoutRequisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Requisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/Tracks.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/Courses.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/CoursesExclusions.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/CoursesRequisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/Exclusions.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/LayoutCourses.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/LayoutRequisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/Requisites.csv" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/csv_files/Tracks.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -71,6 +52,9 @@
       <workItem from="1612853090798" duration="4888000" />
       <workItem from="1612863640739" duration="4119000" />
       <workItem from="1613142969240" duration="156000" />
+      <workItem from="1613706146557" duration="387000" />
+      <workItem from="1614380132946" duration="1119000" />
+      <workItem from="1615357486143" duration="9914000" />
     </task>
     <servers />
   </component>

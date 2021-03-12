@@ -247,7 +247,7 @@
                 .style("display", "none");
 
             // draw exclusion
-            var exc_expanded = new Array(exclusionsinfo.length).fill(0);
+            var exc_expanded = new Array(exclusionsinfo.length).fill(0); // this is to order nodes on the right after expanding
             var nodes_exc = svg
                 .append("g")
                 .attr("class", "exclusions")

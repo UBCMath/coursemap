@@ -1,10 +1,11 @@
 // drag courses
-function dragcircle(event, d) {
+function dragcircle(event, d, x_ini, y_ini) {
     const course_num = d.attr("id");
     var x = event.x;
     var y = event.y;
-    var cx_new = parseFloat(d.attr("data-cx")) + x;
-    var cy_new = parseFloat(d.attr("data-cy")) + y;
+    console.log(d.attr("ini_x"));
+    var cx_new = parseFloat(d.attr("ini_x")) + x;
+    var cy_new = parseFloat(d.attr("ini_y")) + y;
     d.select(".course").attr("cx", cx_new);
     d.select(".course").attr("cy", cy_new);
     d.select(".course_num").attr("x", cx_new);

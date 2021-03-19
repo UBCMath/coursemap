@@ -68,7 +68,7 @@
             var l1_button = l_button.append("g").attr("class", "l_buttons").attr("id", 1)
                 .style("transform", "translate(0px, " + (height - 70) + "px)")
                 .on("click", function() {
-                    switchlayout(d3.select(this), layout_cur, courses1, requisites1, coursesinfo, reqinfo, exclusionsinfo, exclusions);
+                    switchlayout(d3.select(this), layout_cur, courses1, requisites1, coursesinfo, reqinfo, null, null);
                     layout_cur = 1;
                 });
             l1_button.append("polygon")
@@ -313,73 +313,75 @@
                 .text((d) => d.course_number);
 
             // draw exclusion
-            var exc_expanded = new Array(exclusionsinfo.length).fill(0); // this is to order nodes on the right after expanding
-            var nodes_exc = d3.select("#coursemap").select("svg")
-                .append("g")
-                .attr("class", "exclusions")
-                .selectAll("g")
-                .data(exclusionsinfo)
-                .join("g")
-                .attr("id", (exc) => exc.id)
-                .attr("class", "exc")
-                .style("display", "none")
-                .attr("expanded", false)
-                .style("pointer-events", "all")
-                .on("click", function(event, d) {
-                    expand_exc(d3.select(this), exclusions, exc_expanded)
-                })
-                .on("mouseover", function(event, d) {
-                    showexcinfo(event, d3.select(this), exclusionsinfo)
-                })
-                .on("mouseout", function(event, d) {
-                    hideexcinfo(d3.select(this))
-                });
-            nodes_exc
-                .append("circle")
-                .attr("id", (exc) => exc.id)
-                .attr("class", "exc_circle");
-            nodes_exc
-                .append("text")
-                .attr("id", (exc) => exc.id)
-                .attr("text-anchor", "middle")
-                .attr("font-size", 11)
-                .text((exc) => exc.id);
+            if (exclusionsinfo != null) {
+                var exc_expanded = new Array(exclusionsinfo.length).fill(0); // this is to order nodes on the right after expanding
+                var nodes_exc = d3.select("#coursemap").select("svg")
+                    .append("g")
+                    .attr("class", "exclusions")
+                    .selectAll("g")
+                    .data(exclusionsinfo)
+                    .join("g")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc")
+                    .style("display", "none")
+                    .attr("expanded", false)
+                    .style("pointer-events", "all")
+                    .on("click", function(event, d) {
+                        expand_exc(d3.select(this), exclusions, exc_expanded)
+                    })
+                    .on("mouseover", function(event, d) {
+                        showexcinfo(event, d3.select(this), exclusionsinfo)
+                    })
+                    .on("mouseout", function(event, d) {
+                        hideexcinfo(d3.select(this))
+                    });
+                nodes_exc
+                    .append("circle")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc_circle");
+                nodes_exc
+                    .append("text")
+                    .attr("id", (exc) => exc.id)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", 11)
+                    .text((exc) => exc.id);
 
-            nodes_exc.each(function(d) {
-                var node = d3.select(this);
-                const exc_id = node.attr("id");
-                var exc_courses = exclusions.filter(function(c) {
-                    return c.exclusion_id == exc_id;
+                nodes_exc.each(function(d) {
+                    var node = d3.select(this);
+                    const exc_id = node.attr("id");
+                    var exc_courses = exclusions.filter(function(c) {
+                        return c.exclusion_id == exc_id;
+                    });
+                    var x = 0;
+                    var y = 0;
+                    var count = 0;
+                    var course_nums = exc_courses.map((a) => a.course_number);
+                    course_nums.forEach((num, i) => {
+                        nodes
+                            .filter(function(d) {
+                                return this.id == num;
+                            })
+                            .each(function(d) {
+                                count += 1;
+                                x += Number(d3.select(this).select("circle").attr("cx"));
+                                y += Number(d3.select(this).select("circle").attr("cy"));
+                                d3.select(this).attr("display", "none");
+                            });
+                    });
+                    if (count == 0) {
+                        return;
+                    }
+                    x = x / count;
+                    y = y / count;
+                    node.style("display", "block");
+                    node.select("circle").attr("cx", x).attr("cy", y);
+                    node
+                        .select("text")
+                        .attr("x", x)
+                        .attr("y", y + 3);
+                    expand_lines(node, course_nums);
                 });
-                var x = 0;
-                var y = 0;
-                var count = 0;
-                var course_nums = exc_courses.map((a) => a.course_number);
-                course_nums.forEach((num, i) => {
-                    nodes
-                        .filter(function(d) {
-                            return this.id == num;
-                        })
-                        .each(function(d) {
-                            count += 1;
-                            x += Number(d3.select(this).select("circle").attr("cx"));
-                            y += Number(d3.select(this).select("circle").attr("cy"));
-                            d3.select(this).attr("display", "none");
-                        });
-                });
-                if (count == 0) {
-                    return;
-                }
-                x = x / count;
-                y = y / count;
-                node.style("display", "block");
-                node.select("circle").attr("cx", x).attr("cy", y);
-                node
-                    .select("text")
-                    .attr("x", x)
-                    .attr("y", y + 3);
-                expand_lines(node, course_nums);
-            });
+            }
         }
 
         function cleancourses() {

@@ -5,34 +5,43 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
   <title>UBC Mathematics Undergraduate Program</title>
+  <style>
+    #dashboard { border: 1px solid black; height: 600px; display: inline-block; width: 1400px; font-family: sans-serif; font-size: 10pt; }
+    #infobox { display: inline-block; width: 400px; height: 600px; }
+    #infobox div { margin: 20px 0px 0px 20px; }
+    #coursemap { position: absolute; display: inline-block; height: 600px; }
+  </style>
 </head>
 
 <body>
 
-  <div id="coursemap"></div>
+  <div id="dashboard">
+    <div id="infobox"></div>
+    <div id="coursemap"></div>
+  </div>
 
   <script type="text/javascript">
 
   Promise.all([
-    d3.csv("data/csv/Layout1Courses.csv"),
-    d3.csv("data/csv/Layout1Requisites.csv"),
-    d3.csv("data/csv/Courses.csv")
+    d3.csv("data/csv/LayoutCourses.csv"),
+    d3.csv("data/csv/LayoutRequisites.csv"),
+    d3.csv("data/csv/Courses.csv"),
+    d3.csv("data/csv/Requisites.csv")
   ]).then(function(files) {
 
     const courses = files[0];
     const requisites = files[1];
     const coursesInfo = files[2];
+    const requisitesInfo = files[3];
 
-    var width = 1200, height = 600, scale = 60;
+    // Map is 18 x 10
+    var width = 1000, height = width/1.8, scale = width/18;
     var xcoord = x => x * scale + width / 2;
-    var ycoord = y => height - 80 - y * scale;
+    var ycoord = y => height - y * scale - 1.5*scale;
 
-    var svg = d3.select("#coursemap").append("svg");
+    var svg = d3.select("#coursemap").append("svg").attr("width", width).attr("height", height);
 
-    svg.attr("width", width)
-      .attr("height", height)
-      .style("border","1px solid black");
-
+    // Requisite lines
     var req_lines = svg.append("g")
       .selectAll("line")
       .data(requisites)
@@ -44,6 +53,7 @@
       .attr("stroke","black")
       .attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
 
+    // Course nodes
     svg.append("g")
       .selectAll("circle")
       .data(courses)
@@ -54,6 +64,7 @@
       .attr("fill","white")
       .attr("stroke","black");
 
+    // Course numbers
     svg.append("g")
       .selectAll("text")
       .data(courses)
@@ -67,6 +78,7 @@
       .attr("font-size", 8)
       .text(d => d.course_number);
 
+    // Transparent course nodes for mouse over effect displaying course info
     svg.append("g")
       .selectAll("circle")
       .data(courses)
@@ -78,36 +90,37 @@
       .on("mouseover", showCourseInfo)
       .on("mouseout", hideCourseInfo);
 
-    var courseInfoDiv = d3.select("#coursemap").append("div");
-
-    courseInfoDiv.style("position","absolute")
-      .style("font-family","Arial")
-      .style("font-size","12px")
-      .style("width", width/4 + "px")
-      .style("border","1px solid black")
-      .style("border-radius","2px")
-      .style("background-color","white")
-      .style("padding","10px")
-      .style("display","none")
-      .style("left","20px")
-      .style("top", "20px");
-
-    var courseInfoTemplate = _.template("<strong>MATH <%= number %> <%= title %></strong><br><br> <%= description %>");
+    // Course information template
+    var courseInfoDiv = d3.select("#infobox").append("div").style("display","none");
+    var courseInfoString = `<h2>MATH <%= number %></h2>
+                            <h3><%= title %></h3>
+                            <p><%= description %></p>
+                            <% if (prereqs.length > 0) { %>
+                              <h4>Prerequisites</h4>
+                              <ul><% _.each(prereqs, function(prereq) { %><li><%= prereq.description %></li><% }); %></ul>
+                            <% }; %>
+                            <% if (coreqs.length > 0) { %>
+                              <h4>Corequisites</h4>
+                              <ul><% _.each(coreqs, function(coreq) { %><li><%= coreq.description %></li><% }); %></ul>
+                            <% }; %>`
+    var courseInfoTemplate = _.template(courseInfoString);
 
     function showCourseInfo (event,course) {
-      var courseInfo = coursesInfo.find(d => d.number == course.course_number)
-      var x = xcoord(course.x) + 30;
-      var y = ycoord(course.y);
-      courseInfoDiv.html(courseInfoTemplate(courseInfo)).style("display","block");
+      var courseInfo = coursesInfo.find(d => d.number == course.course_number);
+      var requisiteInfo = requisitesInfo.filter(r => r.course_number == course.course_number);
+      var courseInfoObject = {"number": courseInfo.number,
+                              "title": courseInfo.title,
+                              "description": courseInfo.description,
+                              "prereqs": requisiteInfo.filter(r => r.type == "pre"),
+                              "coreqs": requisiteInfo.filter(r => r.type == "co")};
+      courseInfoDiv.html(courseInfoTemplate(courseInfoObject)).style("display","block");
       req_lines.filter(requisite => requisite.course_number == course.course_number).attr("opacity", 1);
-
     };
 
     function hideCourseInfo (event,course) {
-      courseInfoDiv.style("display","none");
+      courseInfoDiv.html("").style("display","none");
       req_lines.filter(requisite => requisite.course_number == course.course_number)
         .attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
-
     };
 
   });

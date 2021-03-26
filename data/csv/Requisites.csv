@@ -2,111 +2,111 @@ id,course_number,type,description
 1,101,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184"
 2,103,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184"
 3,152,co,MATH 101
-4,105,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184."
-5,121,pre,"Either (a) a score of 68% or higher in MATH 120 or (b) a score of 80% or higher in one of MATH 100, MATH 102, MATH 104, MATH 180, MATH 184 or (c) a score of 5 in AP Calculus AB."
-7,200,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001."
-8,210,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001."
+4,105,pre,"One of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184"
+5,121,pre,"Either (a) a score of 68% or higher in MATH 120 or (b) a score of 80% or higher in one of MATH 100, MATH 102, MATH 104, MATH 180, MATH 184 or (c) a score of 5 in AP Calculus AB"
+7,200,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
+8,210,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
 9,210,co,"One of MATH 215, MATH 255, MATH 256, MATH 258 "
-10,210,co,"One of MATH 152, MATH 221, MATH 223."
+10,210,co,"One of MATH 152, MATH 221, MATH 223"
 11,215,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
-12,215,pre,"One of MATH 152, MATH 221, MATH 223."
-13,215,co,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-14,220,pre,"Either (a) a score of 64% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001 or (b) one of MATH 121, MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-15,217,pre,"A score of 68% or higher in one of PHYS 102, PHYS 108, PHYS 118, PHYS 153, PHYS 158, SCIE 001 and a score of 68% or higher in one of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001."
-17,217,co,"One of MATH 152, MATH 221, MATH 223."
-16,221,pre,"Either (a) a score of 64% or higher in one of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184 or (b) one of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001 "
-18,223,pre,"Either (a) MATH 121 or (b) a score of 68% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001."
-20,226,pre,"Either (a) a score of 68% or higher in MATH 121 or (b) a score of 80% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001."
+12,215,pre,"One of MATH 152, MATH 221, MATH 223"
+13,215,co,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+14,220,pre,"Either (a) a score of 64% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001 or (b) one of MATH 121, MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+15,217,pre,"A score of 68% or higher in one of PHYS 102, PHYS 108, PHYS 118, PHYS 153, PHYS 158, SCIE 001 and a score of 68% or higher in one of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
+17,217,co,"One of MATH 152, MATH 221, MATH 223"
+16,221,pre,"Either (a) a score of 64% or higher in one of MATH 100, MATH 102, MATH 104, MATH 110, MATH 120, MATH 180, MATH 184 or (b) one of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
+18,223,pre,"Either (a) MATH 121 or (b) a score of 68% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001"
+20,226,pre,"Either (a) a score of 68% or higher in MATH 121 or (b) a score of 80% or higher in one of MATH 101, MATH 103, MATH 105, SCIE 001"
 22,226,co,"One of MATH 152, MATH 221, MATH 223"
-23,227,pre,A score of 68% or higher in MATH 226.
-24,253,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001."
+23,227,pre,A score of 68% or higher in MATH 226
+24,253,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
 25,254,pre,MATH 101
-26,254,pre,"One of MATH 152, MATH 221, MATH 223."
-27,254,co,"All of MECH 222, MECH 225."
+26,254,pre,"One of MATH 152, MATH 221, MATH 223"
+27,254,co,"All of MECH 222, MECH 225"
 28,255,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
-29,255,pre,"One of MATH 152, MATH 221, MATH 223."
-30,255,co,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-31,256,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001 "
-32,256,pre,"One of MATH 152, MATH 221, MATH 223."
-33,256,co,"One of MATH 200, MATH 217, MATH 226, MATH 253."
-34,257,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258."
+29,255,pre,"One of MATH 152, MATH 221, MATH 223"
+30,255,co,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+31,256,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
+32,256,pre,"One of MATH 152, MATH 221, MATH 223"
+33,256,co,"One of MATH 200, MATH 217, MATH 226, MATH 253"
+34,257,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
 35,258,pre,MATH 101
-36,258,pre,"One of MATH 152, MATH 221, MATH 223."
-37,258,co,"All of MECH 221, MECH 224."
-38,264,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-39,264,co,"One of BMEG 220, ELEC 211."
-40,300,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-41,300,co,"One of MATH 217, MATH 227, MATH 254, MATH 317."
+36,258,pre,"One of MATH 152, MATH 221, MATH 223"
+37,258,co,"All of MECH 221, MECH 224"
+38,264,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+39,264,co,"One of BMEG 220, ELEC 211"
+40,300,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+41,300,co,"One of MATH 217, MATH 227, MATH 254, MATH 317"
 42,301,pre,"One of MATH 300, MATH 305"
-43,301,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258."
-44,301,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312."
-45,302,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-47,303,pre,"One of MATH 302, STAT 302."
+43,301,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
+44,301,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312"
+45,302,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+47,303,pre,"One of MATH 302, STAT 302"
 48,305,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
-49,305,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258."
-50,305,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312."
-51,307,pre,"One of MATH 152, MATH 221, MATH 223 "
-52,307,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254."
-53,308,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223."
-55,309,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223."
+49,305,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
+50,305,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312"
+51,307,pre,"One of MATH 152, MATH 221, MATH 223"
+52,307,pre,"One of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254"
+53,308,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223"
+55,309,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223"
 57,310,pre,"One of MATH 152, MATH 221"
-58,310,pre,"One of MATH 220, MATH 226, CPSC 121."
-59,312,pre,"One of MATH 220, MATH 223, MATH 226, CPSC 121 and 9 additional credits of mathematics courses."
-60,313,pre,MATH 312.
-61,316,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258."
+58,310,pre,"One of MATH 220, MATH 226, CPSC 121"
+59,312,pre,"One of MATH 220, MATH 223, MATH 226, CPSC 121 and 9 additional credits of mathematics courses"
+60,313,pre,MATH 312
+61,316,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
 62,317,pre,"One of MATH 200, MATH 226, MATH 253"
-63,317,pre,"One of MATH 152, MATH 221, MATH 223 is recommended."
+63,317,pre,"One of MATH 152, MATH 221, MATH 223 is recommended"
 64,318,pre,"One of MATH 152, MATH 221, MATH 223"
-65,318,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258."
-66,318,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312."
-67,320,pre,"Either (a) a score of 68% or higher in MATH 226 or (b) one of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254 and a score of 80% or higher in MATH 220."
-69,321,pre,MATH 320.
-70,322,pre,"Either (a) a score of 68% or higher in one of MATH 223, MATH 310 or (b) one of MATH 152, MATH 221, MATH 223 and a score of 80% or higher in MATH 220."
-72,323,pre,MATH 322.
-73,340,pre,"One of MATH 152, MATH 221, MATH 223."
-74,341,pre,"One of MATH 220, MATH 223, MATH 226, CPSC 121."
+65,318,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
+66,318,co,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312"
+67,320,pre,"Either (a) a score of 68% or higher in MATH 226 or (b) one of MATH 200, MATH 217, MATH 226, MATH 253, MATH 254 and a score of 80% or higher in MATH 220"
+69,321,pre,MATH 320
+70,322,pre,"Either (a) a score of 68% or higher in one of MATH 223, MATH 310 or (b) one of MATH 152, MATH 221, MATH 223 and a score of 80% or higher in MATH 220"
+72,323,pre,MATH 322
+73,340,pre,"One of MATH 152, MATH 221, MATH 223"
+74,341,pre,"One of MATH 220, MATH 223, MATH 226, CPSC 121"
 75,342,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223"
 77,344,pre,"Either (a) one of MATH 152, MATH 221 and one of MATH 220, MATH 226, CPSC 121 or (b) MATH 223"
-79,345,pre,"A score of 68% or higher in one of MATH 215, MATH 255, MATH 256, MATH 258."
-80,360,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001."
-81,361,pre,"One of BIOL 301, MATH 215, MATH 255, MATH 256, MATH 258."
+79,345,pre,"A score of 68% or higher in one of MATH 215, MATH 255, MATH 256, MATH 258"
+80,360,pre,"One of MATH 101, MATH 103, MATH 105, MATH 121, SCIE 001"
+81,361,pre,"One of BIOL 301, MATH 215, MATH 255, MATH 256, MATH 258"
 82,400,pre,"One of MATH 300, MATH 305"
-83,400,pre,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312."
+83,400,pre,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312"
 84,401,pre,"Either (a) a score of 80% or higher in one of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312 or (b) MATH 400"
-86,402,pre,"A score of 68% or higher in one of MATH 301, MATH 320."
-87,403,pre,"A score of 68% or higher in one of MATH 301, MATH 320. "
-88,403,pre,MATH 402 is recommended.
+86,402,pre,"A score of 68% or higher in one of MATH 301, MATH 320"
+87,403,pre,"A score of 68% or higher in one of MATH 301, MATH 320"
+88,403,pre,MATH 402 is recommended
 89,404,pre,MATH 300 and a score of 68% or higher in MATH 321
-90,404,co,MATH 420.
-91,405,pre,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312."
+90,404,co,MATH 420
+91,405,pre,"One of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312"
 92,406,pre,"One of MATH 307, CPSC 302"
-93,406,pre,"Either (a) a score of 80% or higher in one of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312 or (b) MATH 400."
-95,412,pre,A score of 68% or higher in MATH 320.
-96,412,pre,A score of 68% or higher in MATH 322.
-97,418,pre,A score of 68% or higher in MATH 321.
-98,419,pre,MATH 418.
-99,420,pre,A score of 68% or higher in MATH 321.
-100,421,pre,MATH 420.
-101,422,pre,MATH 323.
-102,423,pre,MATH 323.
-103,423,pre,"A score of 68% or higher in one of MATH 412, MATH 422."
+93,406,pre,"Either (a) a score of 80% or higher in one of MATH 256, MATH 257, MATH 316, MATH 358, MECH 358, PHYS 312 or (b) MATH 400"
+95,412,pre,A score of 68% or higher in MATH 320
+96,412,pre,A score of 68% or higher in MATH 322
+97,418,pre,A score of 68% or higher in MATH 321
+98,419,pre,MATH 418
+99,420,pre,A score of 68% or higher in MATH 321
+100,421,pre,MATH 420
+101,422,pre,MATH 323
+102,423,pre,MATH 323
+103,423,pre,"A score of 68% or higher in one of MATH 412, MATH 422"
 104,424,pre,"Either (a) a score of 68% or higher in MATH 223 or (b) a score of 80% or higher in one of MATH 152, MATH 221"
-106,424,pre,"Either (a) a score of 68% or higher in MATH 227 or (b) a score of 80% or higher in one of MATH 217, MATH 254, MATH 264, MATH 317."
-108,425,pre,MATH 424.
-109,426,pre,"A score of 68% or higher in all of MATH 321, MATH 322."
-110,427,pre,MATH 426.
+106,424,pre,"Either (a) a score of 68% or higher in MATH 227 or (b) a score of 80% or higher in one of MATH 217, MATH 254, MATH 264, MATH 317"
+108,425,pre,MATH 424
+109,426,pre,"A score of 68% or higher in all of MATH 321, MATH 322"
+110,427,pre,MATH 426
 111,428,pre,"One of MATH 215, MATH 255, MATH 256, MATH 258"
-112,428,pre,"One of PHYS 216, PHYS 306, ENPH 270."
-113,428,co,MATH 320.
-114,437,co,"One of MATH 320, MATH 322."
-115,440,pre,MATH 300.
-116,440,pre,A score of 68% or higher in MATH 320.
-117,441,pre,MATH 340.
-118,442,pre,"3rd year standing and one of MATH 220, MATH 223, MATH 226 or CPSC 221."
-119,443,pre,"A score of 68% or higher in one of MATH 220, MATH 223, MATH 226, CPSC 121. And 6 credits of MATH numbered 300 or above."
-120,444,pre,"One of MATH 220, MATH 226 and 6 credits of MATH courses numbered 300 or higher."
-121,446,pre,27 credits of MATH.
-122,450,pre,MATH 301.
-123,450,pre,MATH 400.
-124,462,pre,"One of MATH 361, MATH 345."
-125,404,pre,A score of 68% or higher in MATH 321.
+112,428,pre,"One of PHYS 216, PHYS 306, ENPH 270"
+113,428,co,MATH 320
+114,437,co,"One of MATH 320, MATH 322"
+115,440,pre,MATH 300
+116,440,pre,A score of 68% or higher in MATH 320
+117,441,pre,MATH 340
+118,442,pre,"3rd year standing and one of MATH 220, MATH 223, MATH 226 or CPSC 221"
+119,443,pre,"A score of 68% or higher in one of MATH 220, MATH 223, MATH 226, CPSC 121. And 6 credits of MATH numbered 300 or above"
+120,444,pre,"One of MATH 220, MATH 226 and 6 credits of MATH courses numbered 300 or higher"
+121,446,pre,27 credits of MATH
+122,450,pre,MATH 301
+123,450,pre,MATH 400
+124,462,pre,"One of MATH 361, MATH 345"
+125,404,pre,A score of 68% or higher in MATH 321

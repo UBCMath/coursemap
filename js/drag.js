@@ -1,10 +1,10 @@
 // drag courses
-function dragcircle(event, d) {
+function dragcircle(event, d, x_ini, y_ini) {
     const course_num = d.attr("id");
     var x = event.x;
     var y = event.y;
-    var cx_new = parseFloat(d.attr("data-cx")) + x;
-    var cy_new = parseFloat(d.attr("data-cy")) + y;
+    var cx_new = parseFloat(d.attr("ini_x")) + x;
+    var cy_new = parseFloat(d.attr("ini_y")) + y;
     d.select(".course").attr("cx", cx_new);
     d.select(".course").attr("cy", cy_new);
     d.select(".course_num").attr("x", cx_new);
@@ -19,8 +19,8 @@ function dragcircle(event, d) {
 function resetdrag_1(d, exclusions) {
     d.append("rect")
         .attr("class", "reset_stroke")
-        .attr("x", 114)
-        .attr("y", 16);
+        .attr("x", 127)
+        .attr("y", 18);
     d.select("text").style("fill", "#BC1B3C");
     d3.selectAll(".node").each(function(d) {
         if (d3.select(this).attr("moved") == "true") {

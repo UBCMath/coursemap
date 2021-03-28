@@ -1,4 +1,7 @@
-function expand_exc(event, d, exclusions) {
+var excInfoTemplate = _.template("<strong><%= title %></strong><br><br> <%= description %>");
+
+
+function expand_exc(d, exclusions, exc_expanded) {
     const exc_id = d.attr("id");
     const course_nums = exclusions
         .filter(function(c) {
@@ -6,12 +9,15 @@ function expand_exc(event, d, exclusions) {
         })
         .map(a => a.course_number);
     const pre_state = d.attr("expanded");
-    const x = d.select("circle").attr("cx");
-    const y = d.select("circle").attr("cy");
     if (pre_state == "true") {
         d.attr("expanded", false);
+        d.style("transform", null);
+        exc_expanded.splice(exc_expanded.indexOf(exc_id), 1, 0);
     } else {
         d.attr("expanded", true);
+        var index = exc_expanded.indexOf(0);
+        move_circle(d, index);
+        exc_expanded[index] = exc_id;
     }
 
     course_nums.forEach((num, i) => {
@@ -31,14 +37,19 @@ function expand_exc(event, d, exclusions) {
     updateLinesPos();
 }
 
+function move_circle(d, index) {
+    const x = d.select("circle").attr("cx");
+    const y = d.select("circle").attr("cy");
+    d.style("transform", "translateX(" + (-x + width - 200 + (index % 4) * 50).toString() +
+        "px) translateY(" + (-y + 175 + 30 * parseInt(index / 4)).toString() + "px)");
+}
+
 function expand_lines(node, course_nums) {
     d3.selectAll(".pre_line")
         .each(function(d) {
             var line = d3.select(this);
             const exc_id = node.attr("id");
             const state = node.attr("expanded");
-            const x = node.select("circle").attr("cx");
-            const y = node.select("circle").attr("cy");
             const str = line.attr("id"); // always in course-course form
             const course = str.split("-")[0]; // true course
             const pre = str.split("-")[1]; // true pre
@@ -53,4 +64,43 @@ function expand_lines(node, course_nums) {
                 line.attr("pre", str.split("-")[1]);
             }
         });
+}
+
+function showexcinfo(event, d, excinfos) {
+    const exc_id = d.attr("id");
+    var tooltip = d3
+        .select("#coursemap")
+        .append("div")
+        .attr("class", "tooltip")
+        .attr("id", "exc");
+
+    const excinfo = excinfos.find(function(c) {
+        return c.id == exc_id;
+    });
+    const bar_x = event.pageX;
+    const bar_y = event.pageY;
+    tooltip.style("left", bar_x + 5 + "px")
+        .style("top", bar_y + 5 + "px")
+        .style("display", "block")
+        .html(excInfoTemplate(excinfo));
+
+    // adjust position thus tooltip won't overflow from the screen while near the edge
+    tooltip.style("transform", function(d) {
+        var str = "";
+        if (bar_x + 400 >= width) {
+            str = "translateX(" + (width - 400 - bar_x).toString() + "px) ";
+
+        }
+        const barlength = 200; // weird bug will happen when trying to get height of tooltip, use preset constant instead
+        if (bar_y + barlength >= height) {
+            str = str + "translateY(" + (height - barlength - bar_y).toString() + "px)";
+        }
+        return str;
+    });
+}
+
+function hideexcinfo(d) {
+    d3.select("#coursemap").selectAll(".tooltip").filter(function(d) {
+        return this.id == "exc";
+    }).remove();
 }

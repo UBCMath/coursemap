@@ -22,6 +22,16 @@
     stroke: #F5D76E;
 }
 
+.l_button {
+    fill: #F4E2D8;
+}
+
+.l_button-chosen {
+    fill: #EF629F;
+    opacity: 0.8;
+    transform: scale(1.2, 1);
+}
+
 .exc_circle {
     r: 11px;
     fill: #4CAEAF;

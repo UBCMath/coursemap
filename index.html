@@ -4,6 +4,7 @@
 <head>
     <meta charset="utf-8">
     <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
     <title>UBC Mathematics Undergraduate Program</title>
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -11,7 +12,6 @@
 
 <body>
     <div id="coursemap"></div>
-    <svg></svg>
     <script type="text/javascript">
         const width = 1200,
             height = 600,
@@ -24,7 +24,9 @@
             d3.csv("data/csv/CoursesTracks.csv"),
             d3.csv("data/csv/Requisites.csv"),
             d3.csv("data/csv/Exclusions.csv"),
-            d3.csv("data/csv/CoursesExclusions.csv")
+            d3.csv("data/csv/CoursesExclusions.csv"),
+            d3.csv("data/csv/Layout1Courses.csv"),
+            d3.csv("data/csv/Layout1Requisites.csv"),
         ]).then(function(files) {
             const courses = files[0];
             const requisites = files[1];
@@ -34,36 +36,58 @@
             const reqinfo = files[5];
             const exclusionsinfo = files[6];
             const exclusions = files[7];
+            const courses1 = files[8];
+            const requisites1 = files[9];
 
-            var xcoord = (x) => x * scale + width / 2;
-            var ycoord = (y) => height - 30 - y * scale;
-            var pre_line = (req) => req.course_number + "-" + req.requisite_number;
+            var layout_cur = -1; //current layout
 
-            // add lines
             var svg = d3
                 .select("#coursemap")
                 .append("svg")
                 .attr("width", width)
                 .attr("height", height)
                 .style("border", "1px solid black");
-            var lines = svg
-                .append("g")
-                .attr("class", "lines")
-                .selectAll("line")
-                .data(requisites);
-            lines
-                .join("line")
-                .attr("id", (requisite) => pre_line(requisite))
-                .attr("course", (requisite) => requisite.course_number)
-                .attr("pre", (requisite) => requisite.requisite_number)
-                .attr("class", "pre_line");
+
+
+            // add layout switch button
+            var l_button = svg.append("g");
+            var l0_button = l_button.append("g").attr("class", "l_buttons").attr("id", 0)
+                .style("transform", "translate(0px, " + (height - 100) + "px)")
+                .on("click", function() {
+                    switchlayout(d3.select(this), layout_cur, courses, requisites, coursesinfo, reqinfo, exclusionsinfo, exclusions);
+                    layout_cur = 0;
+                });
+            l0_button.append("polygon")
+                .attr("points", "0,0 55,0 45,20 0,20")
+                .attr("class", "l_button");
+            l0_button.append("text")
+                .attr("x", 2)
+                .attr("y", 13)
+                .style("font", "10px 	Arial")
+                .text("Layout 1");
+
+            var l1_button = l_button.append("g").attr("class", "l_buttons").attr("id", 1)
+                .style("transform", "translate(0px, " + (height - 70) + "px)")
+                .on("click", function() {
+                    switchlayout(d3.select(this), layout_cur, courses1, requisites1, coursesinfo, reqinfo, null, null);
+                    layout_cur = 1;
+                });
+            l1_button.append("polygon")
+                .attr("points", "0,0 55,0 45,20 0,20")
+                .attr("class", "l_button");
+            l1_button.append("text")
+                .attr("x", 2)
+                .attr("y", 13)
+                .style("font", "10px 	Arial")
+                .text("Layout 2");
+
 
             // add descriptions in the top-right
             var notes = svg.append("g").attr("class", "notes");
             // note1: click a course to mark it
             var note1 = notes
                 .append("g")
-                .style("transform", "translate(" + (width - 215) + "px, 31px)");
+                .style("transform", "translate(" + (width - 225) + "px, 31px)");
             note1
                 .append("polygon")
                 .attr("points", "0,9 5,0 10,9")
@@ -72,12 +96,11 @@
                 .append("text")
                 .attr("x", 15)
                 .attr("y", 10)
-                .attr("font-size", 14)
                 .text("Click a course to mark it.");
             // note2: drag and reset
             var note2 = notes
                 .append("g")
-                .style("transform", "translate(" + (width - 215) + "px, 51px)");
+                .style("transform", "translate(" + (width - 225) + "px, 51px)");
             note2
                 .append("polygon")
                 .attr("points", "0,9 5,0 10,9")
@@ -85,15 +108,13 @@
             var note2_text = note2
                 .append("text")
                 .attr("x", 15)
-                .attr("y", 10)
-                .attr("font-size", 14);
-            note2_text.append("tspan").text("Drag courses to make your own");
-            note2_text
-                .append("tspan")
-                .attr("x", 15)
-                .attr("dy", "1.2em")
-                .text("collection. Click");
-            note2_text.append("tspan").attr("x", 150).attr("dy", "0em").text("to reset.");
+                .attr("y", 10);
+            // This is silly, I know, as svg.text do not support auto line break. 
+            // One may prefer div-p. However, that will cause an overlap bug when one drags a circle laying above the text.
+            // We do have some alternative ways. But as notes are usually short, I'd rather manually break lines.
+            note2_text.append("tspan").attr("textLength", 200).text("Drag courses to make your own");
+            note2_text.append("tspan").attr("x", 15).attr("dy", "1.2em").text("collection. Click");
+            note2_text.append("tspan").attr("x", 165).text("to reset.");
             var reset_button = note2
                 .append("g")
                 .style("pointer-events", "all")
@@ -103,17 +124,28 @@
             reset_button
                 .append("rect")
                 .attr("class", "reset_button")
-                .attr("x", 112)
-                .attr("y", 14);
+                .attr("x", 125)
+                .attr("y", 16);
             reset_button
                 .append("text")
                 .attr("class", "reset_text")
                 .text("Here")
                 .attr("textLength", 25)
-                .attr("x", 117)
-                .attr("y", 26)
+                .attr("x", 130)
+                .attr("y", 28)
                 .style("font", "11px 	Arial")
                 .style("font-weight", "bold");
+            // note3: exclusions
+            var note3 = notes.append("g")
+                .style("transform", "translate(" + (width - 225) + "px, 91px)");
+            note3.append("polygon")
+                .attr("points", "0,9 5,0 10,9")
+                .attr("fill", "#BC1B3C");
+            var note3_text = note3.append("text")
+                .attr("x", 15).attr("y", 10);
+            note3_text.append("tspan").attr("textLength", 200).text("Similar courses are displayed");
+            note3_text.append("tspan").attr("x", 15).attr("textLength", 200).attr("dy", "1.2em").text("as a collection. Click highlighted");
+            note3_text.append("tspan").attr("x", 15).attr("dy", "1.2em").text("nodes to see details.");
 
             // add track panel in the top-left
             var g = svg
@@ -154,7 +186,7 @@
                 .attr("class", "track_button")
                 .attr("x", 50)
                 .attr("y", function(t) {
-                    return t.id * 30 + 32;
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height - 5;
                 });
             track_button
                 .append("text")
@@ -163,21 +195,66 @@
                 .attr("class", "track_title")
                 .attr("font-size", 13)
                 .attr("y", function(t) {
-                    return t.id * 30 + 52;
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height + 15;
                 })
                 .attr("textLength", function(t) {
                     var title = t.title;
-                    if (title.length >= 35) return "200";
+                    if (title.length >= 30) return "200";
                     else return;
                 })
                 .text((d) => d.title);
 
-            // draw nodes for each course
-            var nodes = svg
+
+            switchlayout(l0_button, layout_cur, courses, requisites, coursesinfo, reqinfo, exclusionsinfo, exclusions);
+            layout_cur = 0;
+
+        });
+
+        function switchlayout(d, layout_cur, courses, requisites, coursesinfo, reqinfo, exclusionsinfo, exclusions) {
+            if (d.attr("id") != layout_cur) {
+                cleancourses();
+                addlines(requisites);
+                addcourses(courses, coursesinfo, reqinfo, exclusions, exclusionsinfo);
+                updateLinesPos();
+                d.select("polygon").classed("l_button-chosen", true);
+                d.select("text").style("transform", "scale(1.2, 1.1)");
+                d3.selectAll(".l_buttons").each(function() {
+                    if (d3.select(this).attr("id") == layout_cur) {
+                        d3.select(this).select("polygon").classed("l_button-chosen", false);
+                        d3.select(this).select("text").style("transform", "");
+                    }
+                })
+                d3.selectAll(".track_button").each(function(d) {
+                    d3.select(this).classed("track_button-tracking", false);
+                });
+            }
+        }
+
+        function addlines(requisites_data) {
+            var pre_line = (req) => req.course_number + "-" + req.requisite_number;
+
+            var lines = d3.select("#coursemap").select("svg")
+                .append("g")
+                .attr("class", "lines")
+                .selectAll("line")
+                .data(requisites_data);
+            lines
+                .join("line")
+                .attr("id", (requisite) => pre_line(requisite))
+                .attr("course", (requisite) => requisite.course_number)
+                .attr("pre", (requisite) => requisite.requisite_number)
+                .attr("class", "pre_line");
+        }
+
+        function addcourses(courses_data, coursesinfo, reqinfo, exclusions, exclusionsinfo) {
+            var xcoord = (x) => x * scale + width / 2;
+            var ycoord = (y) => height - 30 - y * scale;
+
+            var nodes = d3.select("#coursemap").select("svg")
                 .append("g")
                 .attr("class", "nodes")
                 .selectAll("g")
-                .data(courses)
+                .data(courses_data)
                 .join("g")
                 .attr("id", (course) => course.course_number)
                 .attr("class", "node")
@@ -186,13 +263,18 @@
                 .attr("data-cy", (course) => ycoord(course.y))
                 .style("pointer-events", "all")
                 .on("mouseover", function(event, d) {
-                    showinfo(event, d3.select(this), coursesinfo, reqinfo)
+                    showinfo(event, d3.select(this), coursesinfo, reqinfo);
                 })
                 .on("mouseout", function(event, d) {
-                    hideinfo(d3.select(this))
+                    hideinfo(event, d3.select(this));
                 })
-                .on("click", function(d) {
+                .on("click", function(event, d) {
                     clickcircle(d3.select(this));
+                    if (d3.select(this).select(".course").classed("course-click")) {
+                        showinfo(event, d3.select(this), coursesinfo, reqinfo);
+                    } else {
+                        hideinfo(event, d3.select(this));
+                    }
                 })
                 .call(
                     d3
@@ -225,79 +307,83 @@
                 .attr("font-size", 9)
                 .text((d) => d.course_number);
 
-
-            // show course information on hover
-            var tooltip = d3
-                .select("#coursemap")
-                .append("div")
-                .attr("class", "tooltip")
-                .style("display", "none");
-
             // draw exclusion
-            var nodes_exc = svg
-                .append("g")
-                .attr("class", "exclusions")
-                .selectAll("g")
-                .data(exclusionsinfo)
-                .join("g")
-                .attr("id", (exc) => exc.id)
-                .attr("class", "exc")
-                .style("display", "none")
-                .attr("expanded", false)
-                .style("pointer-events", "all")
-                .on("click", function(event, d) {
-                    expand_exc(event, d3.select(this), exclusions);
-                });
+            if (exclusionsinfo != null) {
+                var exc_expanded = new Array(exclusionsinfo.length).fill(0); // this is to order nodes on the right after expanding
+                var nodes_exc = d3.select("#coursemap").select("svg")
+                    .append("g")
+                    .attr("class", "exclusions")
+                    .selectAll("g")
+                    .data(exclusionsinfo)
+                    .join("g")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc")
+                    .style("display", "none")
+                    .attr("expanded", false)
+                    .style("pointer-events", "all")
+                    .on("click", function(event, d) {
+                        expand_exc(d3.select(this), exclusions, exc_expanded)
+                    })
+                    .on("mouseover", function(event, d) {
+                        showexcinfo(event, d3.select(this), exclusionsinfo)
+                    })
+                    .on("mouseout", function(event, d) {
+                        hideexcinfo(d3.select(this))
+                    });
+                nodes_exc
+                    .append("circle")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc_circle");
+                nodes_exc
+                    .append("text")
+                    .attr("id", (exc) => exc.id)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", 11)
+                    .text((exc) => exc.short);
 
-            nodes_exc
-                .append("circle")
-                .attr("id", (exc) => exc.id)
-                .attr("class", "exc_circle");
-            nodes_exc
-                .append("text")
-                .attr("id", (exc) => exc.id)
-                .attr("text-anchor", "middle")
-                .attr("font-size", 11)
-                .text((exc) => exc.id);
-
-            nodes_exc.each(function(d) {
-                var node = d3.select(this);
-                const exc_id = node.attr("id");
-                var exc_courses = exclusions.filter(function(c) {
-                    return c.exclusion_id == exc_id;
+                nodes_exc.each(function(d) {
+                    var node = d3.select(this);
+                    const exc_id = node.attr("id");
+                    var exc_courses = exclusions.filter(function(c) {
+                        return c.exclusion_id == exc_id;
+                    });
+                    var x = 0;
+                    var y = 0;
+                    var count = 0;
+                    var course_nums = exc_courses.map((a) => a.course_number);
+                    course_nums.forEach((num, i) => {
+                        nodes
+                            .filter(function(d) {
+                                return this.id == num;
+                            })
+                            .each(function(d) {
+                                count += 1;
+                                x += Number(d3.select(this).select("circle").attr("cx"));
+                                y += Number(d3.select(this).select("circle").attr("cy"));
+                                d3.select(this).attr("display", "none");
+                            });
+                    });
+                    if (count == 0) {
+                        return;
+                    }
+                    x = x / count;
+                    y = y / count;
+                    node.style("display", "block");
+                    node.select("circle").attr("cx", x).attr("cy", y);
+                    node
+                        .select("text")
+                        .attr("x", x)
+                        .attr("y", y + 3);
+                    expand_lines(node, course_nums);
                 });
-                var x = 0;
-                var y = 0;
-                var count = 0;
-                var course_nums = exc_courses.map((a) => a.course_number);
-                course_nums.forEach((num, i) => {
-                    nodes
-                        .filter(function(d) {
-                            return this.id == num;
-                        })
-                        .each(function(d) {
-                            count += 1;
-                            x += Number(d3.select(this).select("circle").attr("cx"));
-                            y += Number(d3.select(this).select("circle").attr("cy"));
-                            d3.select(this).attr("display", "none");
-                        });
-                });
-                if (count == 0) {
-                    return;
-                }
-                x = x / count;
-                y = y / count;
-                node.style("display", "block");
-                node.select("circle").attr("cx", x).attr("cy", y);
-                node
-                    .select("text")
-                    .attr("x", x)
-                    .attr("y", y + 3);
-                expand_lines(node, course_nums);
-            });
-            updateLinesPos()
+            }
+        }
 
-        });
+        function cleancourses() {
+            d3.selectAll(".lines").remove();
+            d3.selectAll(".nodes").remove();
+            d3.selectAll(".exclusions").remove();
+        }
 
         function updateLinesPos(c_num, x, y) {
             d3.selectAll(".pre_line")

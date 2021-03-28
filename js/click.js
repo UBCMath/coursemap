@@ -3,6 +3,8 @@ function clickcircle(d) {
     const course_num = d.attr("id");
 
     var c_status;
+    d.attr("ini_x", d.select(".course").attr("cx")); //set initial position for dragging
+    d.attr("ini_y", d.select(".course").attr("cy"));
     d.select(".course")
         .each(function(d) {
             c_status = d3.select(this).classed("course-click");

@@ -258,6 +258,7 @@
                 .join("g")
                 .attr("id", (course) => course.course_number)
                 .attr("class", "node")
+                .attr("status", 0)
                 .attr("moved", false)
                 .attr("data-cx", (course) => xcoord(course.x))
                 .attr("data-cy", (course) => ycoord(course.y))
@@ -269,8 +270,8 @@
                     hideinfo(event, d3.select(this));
                 })
                 .on("click", function(event, d) {
-                    clickcircle(d3.select(this));
-                    if (d3.select(this).select(".course").classed("course-click")) {
+                    clickcircle(event, d3.select(this));
+                    if (d3.select(this).attr("status") == 2) {
                         showinfo(event, d3.select(this), coursesinfo, reqinfo);
                     } else {
                         hideinfo(event, d3.select(this));
@@ -279,14 +280,14 @@
                 .call(
                     d3
                     .drag()
-                    .on("start", function(d) {
-                        clickcircle(d3.select(this));
+                    .on("start", function(event, d) {
+                        clickcircle(event, d3.select(this));
                     })
                     .on("drag", function(event, d) {
                         dragcircle(event, d3.select(this));
                     })
-                    .on("end", function(d) {
-                        clickcircle(d3.select(this));
+                    .on("end", function(event, d) {
+                        clickcircle(event, d3.select(this));
                     })
                 );
 

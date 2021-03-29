@@ -17,7 +17,6 @@ function clickcircle(event, d) {
         }
     }
 
-    console.log(d.attr("status"));
     const course_num = d.attr("id");
 
     var c_status;

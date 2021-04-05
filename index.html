@@ -92,15 +92,17 @@
                 .append("polygon")
                 .attr("points", "0,9 5,0 10,9")
                 .attr("fill", "#BC1B3C");
-            note1
+            note1_text = note1
                 .append("text")
                 .attr("x", 15)
                 .attr("y", 10)
-                .text("Click a course to mark it.");
+            note1_text.append('tspan').attr("textLength", 200).text("Click a course to mark it. And");
+            note1_text.append('tspan').attr("textLength", 200).attr("x", 15).attr("dy", "1.2em").text("click it twice to lock the tooltip.");
+
             // note2: drag and reset
             var note2 = notes
                 .append("g")
-                .style("transform", "translate(" + (width - 225) + "px, 51px)");
+                .style("transform", "translate(" + (width - 225) + "px, 71px)");
             note2
                 .append("polygon")
                 .attr("points", "0,9 5,0 10,9")
@@ -137,7 +139,7 @@
                 .style("font-weight", "bold");
             // note3: exclusions
             var note3 = notes.append("g")
-                .style("transform", "translate(" + (width - 225) + "px, 91px)");
+                .style("transform", "translate(" + (width - 225) + "px, 111px)");
             note3.append("polygon")
                 .attr("points", "0,9 5,0 10,9")
                 .attr("fill", "#BC1B3C");

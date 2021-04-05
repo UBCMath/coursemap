@@ -41,7 +41,7 @@ function move_circle(d, index) {
     const x = d.select("circle").attr("cx");
     const y = d.select("circle").attr("cy");
     d.style("transform", "translateX(" + (-x + width - 200 + (index % 4) * 50).toString() +
-        "px) translateY(" + (-y + 175 + 30 * parseInt(index / 4)).toString() + "px)");
+        "px) translateY(" + (-y + 185 + 30 * parseInt(index / 4)).toString() + "px)");
 }
 
 function expand_lines(node, course_nums) {

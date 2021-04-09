@@ -110,7 +110,6 @@ function checklinkvalidity(course) {
 }
 
 function getresponse(url) {
-    console.log("check url validity...")
     return new Promise((resolve, reject) => {
         $.ajax({
             url: url,

@@ -57,6 +57,14 @@
     fill: #000;
 }
 
+.exc_circle {
+    r: 11px;
+    fill: rgb(146, 150, 150);
+    opacity: 0.8;
+    stroke: #000;
+    stroke-width: 1px;
+}
+
 .text_hover {
     fill: #fff;
 }

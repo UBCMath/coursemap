@@ -1,19 +1,18 @@
-id,description
-1,"MATH 100, 102, 104, 110, 120, 180, 184, SCIE 001"
-2,"MATH 101, 103, 105, 121, SCIE 001"
-3,"MATH 152, 221, 223"
-4,"MATH 200, 217, 226, 253, 254"
-5,"MATH 215, 255, 256, 258"
-6,"MATH 217, 227, 254, 264, 317"
-7,"MATH 223, 310"
-8,"MATH 230, 335"
-9,"MATH 257, 316, 358, MECH 358, PHYS 312"
-10,"MATH 300, 305"
-11,"MATH 302, 318, STAT 302"
-12,"MATH 303, 318"
-13,"MATH 312, 437"
-14,"MATH 313, 437"
-15,"MATH 401, 406"
-16,"MATH 405, 406"
-17,"MATH 407, CPSC 402"
-18,"MATH 404, 541"
+id,description,short,title
+1,"MATH 100, 102, 104, 110, 120, 180, 184, SCIE 001 ",DC,Differential Calculus 
+2,"MATH 101, 103, 105, 121, SCIE 001",IC,Integral Calculus  
+3,"MATH 152, 221, 223",LA,Linear Algebra 
+4,"MATH 200, 217, 226, 253, 254",IC,Intermediate Calculus 
+5,"MATH 215, 255, 256, 258",DE,Differential Equations  
+6,"MATH 217, 227, 254, 264, 317",AC,Advanced Calculus  
+7,"MATH 223, 310",AL,Advanced Linear Algebra  
+8,"MATH 230, 335",IN,Introduction  
+9,"MATH 257, 316, 358, MECH 358, PHYS 312",ID,Intermediate Differential Equations  
+10,"MATH 300, 305",CA,Complex Analysis 
+11,"MATH 302, 318, STAT 302",PR,Probability  
+12,"MATH 303, 318",ST,Stochastic  
+13,"MATH 312, 437",NT,Number Theory  
+14,"MATH 313, 437",IN,Intermediate Number Theory  
+15,"MATH 401, 406",AD,Advanced Differential Equations  
+16,"MATH 405, 406",AD,Advanced Differential Equations  
+17,"MATH 404, 541",HA,Harmonic Analysis  

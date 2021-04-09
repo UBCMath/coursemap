@@ -119,6 +119,18 @@
                 .style("font", "11px 	Arial")
                 .style("font-weight", "bold");
 
+            // note3: exclusions
+            var note3 = notes.append("g")
+                .style("transform", "translate(" + (width - 225) + "px, 91px)");
+            note3.append("polygon")
+                .attr("points", "0,9 5,0 10,9");
+            var note3_text = note3.append("text")
+                .attr("x", 15).attr("y", 10);
+            note3_text.append("tspan").attr("textLength", 200).text("Similar courses are displayed");
+            note3_text.append("tspan").attr("x", 15).attr("textLength", 200).attr("dy", "1.2em").text("as a collection. Click highlighted");
+            note3_text.append("tspan").attr("x", 15).attr("dy", "1.2em").text("nodes to see details.");
+
+
             // add track panel in the top-left
             var g = svg
                 .append("g")
@@ -202,6 +214,8 @@
         }
 
         function addlines(requisite) {
+            var pre_line = (req) => req.course_number + "-" + req.requisite_number;
+
             var lines = d3.select("#coursemap").select("svg")
                 .append("g") // group lines so it's easy to debug through the browser, not necessary
                 .attr("class", "lines")
@@ -209,7 +223,8 @@
                 .data(requisite);
             lines
                 .join("line")
-                .attr("course", (requisite) => requisite.course_number)
+                .attr("id", (requisite) => pre_line(requisite)) // this id does not change, indicate the true course and pre
+                .attr("course", (requisite) => requisite.course_number) // these data may be pointed to a grouped node
                 .attr("pre", (requisite) => requisite.requisite_number)
                 .attr("class", "pre_line")
                 .attr("stroke", "black")
@@ -274,6 +289,74 @@
                 .attr("text-anchor", "middle")
                 .attr("font-size", 8)
                 .text((d) => d.course_number);
+
+            // draw exclusion
+            if (exclusionsinfo != null) {
+                var exc_expanded = new Array(exclusionsinfo.length).fill(0); // this is to order nodes on the right after expanding
+                var nodes_exc = d3.select("#coursemap").select("svg")
+                    .append("g")
+                    .attr("class", "exclusions")
+                    .selectAll("g")
+                    .data(exclusionsinfo)
+                    .join("g")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc")
+                    .style("display", "none")
+                    .attr("expanded", false)
+                    .style("pointer-events", "all")
+                    .on("click", function(event, d) {
+                        expand_exc(d3.select(this), exclusions, exc_expanded)
+                    })
+                    .on("mouseover", function(event, d) {
+                        showexcinfo(event, d3.select(this), exclusionsinfo)
+                    });
+                nodes_exc
+                    .append("circle")
+                    .attr("id", (exc) => exc.id)
+                    .attr("class", "exc_circle");
+                nodes_exc
+                    .append("text")
+                    .attr("id", (exc) => exc.id)
+                    .attr("text-anchor", "middle")
+                    .attr("font-size", 11)
+                    .text((exc) => exc.short);
+
+                nodes_exc.each(function(d) {
+                    var node = d3.select(this);
+                    const exc_id = node.attr("id");
+                    var exc_courses = exclusions.filter(function(c) {
+                        return c.exclusion_id == exc_id;
+                    });
+                    var x = 0;
+                    var y = 0;
+                    var count = 0;
+                    var course_nums = exc_courses.map((a) => a.course_number);
+                    course_nums.forEach((num, i) => {
+                        nodes
+                            .filter(function(d) {
+                                return this.id == num;
+                            })
+                            .each(function(d) {
+                                count += 1;
+                                x += Number(d3.select(this).select("circle").attr("cx"));
+                                y += Number(d3.select(this).select("circle").attr("cy"));
+                                d3.select(this).attr("display", "none");
+                            });
+                    });
+                    if (count == 0) {
+                        return;
+                    }
+                    x = x / count;
+                    y = y / count;
+                    node.style("display", "block");
+                    node.select("circle").attr("cx", x).attr("cy", y);
+                    node
+                        .select("text")
+                        .attr("x", x)
+                        .attr("y", y + 3);
+                    expand_lines(node, course_nums);
+                });
+            }
         }
 
 
@@ -299,6 +382,17 @@
                         }
                     } else {
                         // otherwise, update all lines for all courses
+                        // check exclusions first
+                        d3.selectAll(".exc_circle").each(function(d) {
+                            const c_id = d3.select(this).attr("id");
+                            if (course == c_id) {
+                                line.attr("x1", d3.select(this).attr("cx"));
+                                line.attr("y1", d3.select(this).attr("cy"));
+                            } else if (pre == c_id) {
+                                line.attr("x2", d3.select(this).attr("cx"));
+                                line.attr("y2", d3.select(this).attr("cy"));
+                            }
+                        });
                         d3.selectAll(".course").each(function(d) {
                             const c_id = d3.select(this).attr("id");
                             if (course == c_id) {
@@ -316,6 +410,7 @@
     <script src="js/infobox.js"></script>
     <script src="js/drag.js"></script>
     <script src="js/track.js"></script>
+    <script src="js/course_grouping.js"></script>
 </body>
 
 </html>

@@ -33,6 +33,7 @@ function expand_exc(d, exclusions, exc_expanded) {
                 }
             });
     });
+
     expand_lines(d, course_nums);
     updateLinesPos();
 }
@@ -45,6 +46,7 @@ function move_circle(d, index) {
         "px) translateY(" + (-y + 185 + 30 * parseInt(index / 4)).toString() + "px)");
 }
 
+// update the endpoints of lines so it will not conflict with dragging
 function expand_lines(node, course_nums) {
     d3.selectAll(".pre_line")
         .each(function(d) {

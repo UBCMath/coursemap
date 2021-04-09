@@ -57,9 +57,7 @@ function hideCourseInfo(event, course) {
     d3.selectAll(".pre_line").filter(function(d) {
         return d3.select(this).attr("course") == course.attr("id");
     }).each(function(d) {
-        if (!d3.select(this).classed(".line_click")) {
-            d3.select(this).attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0)
-        }
+        d3.select(this).attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0)
     });
 };
 

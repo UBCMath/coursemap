@@ -19,6 +19,8 @@ var courseInfoString = `<h2>MATH <%= number %></h2>
                               <h4>Syllabus</h4>`
 var courseInfoTemplate = _.template(courseInfoString);
 
+var courseInfo_cur = 0; // current displayed course
+
 function showCourseInfo(event, course, coursesInfo, requisitesInfo) {
     const course_num = course.attr("id");
     var courseInfo = coursesInfo.find(d => d.number == course_num);
@@ -37,6 +39,7 @@ function showCourseInfo(event, course, coursesInfo, requisitesInfo) {
 
     // search for url, our program will only try it once 
     // once we get the url, it will be stored into the element as an attribute
+    courseInfo_cur = course_num;
     if (course.attr("request-send") == "false") {
         course.attr("request-send", true);
         checklinkvalidity(course);
@@ -53,7 +56,11 @@ function showCourseInfo(event, course, coursesInfo, requisitesInfo) {
 function hideCourseInfo(event, course) {
     d3.selectAll(".pre_line").filter(function(d) {
         return d3.select(this).attr("course") == course.attr("id");
-    }).attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
+    }).each(function(d) {
+        if (!d3.select(this).classed(".line_click")) {
+            d3.select(this).attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0)
+        }
+    });
 };
 
 // display the link to the syllabus only if it's valid
@@ -66,10 +73,12 @@ function checklinkvalidity(course) {
         url = "http://www.math.ubc.ca/php/MathNet/courseinfo.php?session=" + y + "W&t=outline&name=" + course_num + ":101";
     }
     getresponse(url).then(function() {
-            courseInfoDiv.append("a")
-                .attr("href", url)
-                .attr("target", "_blank")
-                .html(url);
+            if (courseInfo_cur == course_num) {
+                courseInfoDiv.append("a")
+                    .attr("href", url)
+                    .attr("target", "_blank")
+                    .html(url);
+            }
             course.attr("syllabus-link", url);
         })
         .catch(function() {
@@ -80,13 +89,17 @@ function checklinkvalidity(course) {
                 url = "http://www.math.ubc.ca/php/MathNet/courseinfo.php?session=" + y + "W&t=outline&name=" + course_num + ":201";
             }
             getresponse(url).then(function() {
-                courseInfoDiv.append("a")
-                    .attr("href", url)
-                    .attr("target", "_blank")
-                    .html(url);
+                if (courseInfo_cur == course_num) {
+                    courseInfoDiv.append("a")
+                        .attr("href", url)
+                        .attr("target", "_blank")
+                        .html(url);
+                }
                 course.attr("syllabus-link", url);
             }).catch(function() {
-                courseInfoDiv.append("p").html("The instructor hasn't uploaded the syllabus yet!");
+                if (courseInfo_cur == course_num) {
+                    courseInfoDiv.append("p").html("The instructor hasn't uploaded the syllabus yet!");
+                }
                 course.attr("syllabus-link", "No syllabus");
             });
         })

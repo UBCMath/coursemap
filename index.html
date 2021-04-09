@@ -45,7 +45,7 @@
             const courses1 = files[8];
             const requisites1 = files[9];
 
-            var svg = d3.select("#coursemap").append("svg").attr("width", width).attr("height", height);
+            var svg = d3.select("#coursemap").append("svg").attr("width", width).attr("height", height).style("overflow", "visible");
 
             var layout_cur = -1; //current layout
             // add layout switch button
@@ -137,8 +137,6 @@
                 .attr("y", (course) => ycoord(course.y))
                 .attr("dy", "2.5px")
                 .attr("text-anchor", "middle")
-                .attr("font-color", "black")
-                .attr("font-family", "Arial")
                 .attr("font-size", 8)
                 .text((d) => d.course_number);
         }

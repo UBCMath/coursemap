@@ -95,3 +95,46 @@
     stroke-width: 2px;
     fill-opacity: 0.1;
 }
+
+.drop_menu {
+    width: 200px;
+    height: auto;
+    overflow: visible;
+}
+
+.drop_button {
+    padding: 1px 50px 1px 10px;
+    font: 14px sans-serif;
+    border: 1px solid black;
+    ;
+    font-weight: bold;
+    background: #fff;
+    border-radius: 3px;
+    opacity: 0.95;
+    box-shadow: 5px 0px 10px 0px rgba(0, 0, 0, 0.2);
+}
+
+.track_button {
+    height: 30px;
+    width: 200px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.2);
+    fill: rgba(0, 0, 0, 0.2);
+    fill-opacity: 0.6;
+}
+
+.track_button-tracking {
+    height: 30px;
+    width: 200px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.2);
+    fill: rgba(0, 0, 0, 0.4);
+    fill-opacity: 1.0;
+}
+
+.star {
+    transform: translate(225px, 35px) scale(0.7, 0.7);
+    fill: #000;
+}

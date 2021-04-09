@@ -119,6 +119,64 @@
                 .style("font", "11px 	Arial")
                 .style("font-weight", "bold");
 
+            // add track panel in the top-left
+            var g = svg
+                .append("g")
+                .style("pointer-events", "all")
+                .on("click", clickdropdown);
+            var drop_menu = g
+                .append("foreignObject")
+                .attr("class", "drop_menu")
+                .attr("x", 50)
+                .attr("y", 25);
+            var menu_button = drop_menu
+                .append("xhtml:div")
+                .append("div")
+                .attr("class", "drop_button");
+            menu_button.append("p").style("font-size", "11px").html("Track Your Interest Here!");
+            // small star
+            g.append("polygon")
+                .attr("class", "star")
+                .attr("points", "10,1 4,20 19,8 1,8 16,20");
+            // button for each track
+            var track_button = svg
+                .append("g")
+                .attr("class", "tracks")
+                .selectAll("rect")
+                .data(tracks)
+                .join("g")
+                .attr("class", "track_panel")
+                .attr("id", (t) => t.id)
+                .attr("visibility", "hidden")
+                .style("pointer-events", "all")
+                .on("click", function(d) {
+                    selecttrack(d3.select(this), tracksinfo);
+                });
+            track_button
+                .append("rect")
+                .attr("id", (t) => t.id)
+                .attr("class", "track_button")
+                .attr("x", 50)
+                .attr("y", function(t) {
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height - 5;
+                });
+            track_button
+                .append("text")
+                .attr("x", 50)
+                .attr("id", (t) => t.id)
+                .attr("class", "track_title")
+                .attr("font-size", 13)
+                .attr("y", function(t) {
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height + 15;
+                })
+                .attr("textLength", function(t) {
+                    var title = t.title;
+                    if (title.length >= 30) return "200";
+                    else return;
+                })
+                .text((d) => d.title);
+
+
 
             switchlayout(l0_button, layout_cur, courses, requisites, coursesInfo, requisitesInfo, exclusionsinfo, exclusions);
             layout_cur = 0;
@@ -137,6 +195,9 @@
                         return d3.select(this).attr("id") == layout_cur;
                     })
                     .classed("layout_buttons_active", false);
+                d3.selectAll(".track_button").each(function(d) {
+                    d3.select(this).classed("track_button-tracking", false);
+                });
             }
         }
 
@@ -254,6 +315,7 @@
     </script>
     <script src="js/infobox.js"></script>
     <script src="js/drag.js"></script>
+    <script src="js/track.js"></script>
 </body>
 
 </html>

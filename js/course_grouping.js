@@ -1,6 +1,6 @@
 var excInfoTemplate = _.template("<h2><%= title %></h2><br><br> <%= description %>");
 
-
+// the third parameter is to order and display expanded grouping buttons on the right
 function expand_exc(d, exclusions, exc_expanded) {
     const exc_id = d.attr("id");
     const course_nums = exclusions
@@ -37,6 +37,7 @@ function expand_exc(d, exclusions, exc_expanded) {
     updateLinesPos();
 }
 
+// display grouping buttons in order
 function move_circle(d, index) {
     const x = d.select("circle").attr("cx");
     const y = d.select("circle").attr("cy");
@@ -50,9 +51,9 @@ function expand_lines(node, course_nums) {
             var line = d3.select(this);
             const exc_id = node.attr("id");
             const state = node.attr("expanded");
-            const str = line.attr("id"); // always in course-course form
-            const course = str.split("-")[0]; // true course
-            const pre = str.split("-")[1]; // true pre
+            const str = line.attr("id"); // always in "course-course" form
+            const course = str.split("-")[0]; // store true course
+            const pre = str.split("-")[1]; // store true pre
             // set course/pre to exclutions id (1 to 18) if necessary 
             if (course_nums.includes(course) && state == "false") {
                 line.attr("course", exc_id);

@@ -44,3 +44,34 @@
     fill: #fff;
     stroke: #000;
 }
+
+.course_hover {
+    fill: #000;
+}
+
+.course_click {
+    fill: #000;
+}
+
+.line_click {
+    opacity: 1;
+}
+
+.reset_button {
+    height: 15px;
+    width: 35px;
+    rx: 2px;
+    ry: 2px;
+    stroke: rgba(0, 0, 0, 0.4);
+    fill: #fff;
+}
+
+.reset_stroke {
+    height: 11px;
+    width: 31px;
+    rx: 1px;
+    ry: 1px;
+    stroke: #000;
+    stroke-width: 2px;
+    fill-opacity: 0.1;
+}

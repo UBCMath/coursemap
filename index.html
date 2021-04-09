@@ -1,129 +1,186 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-  <meta charset="utf-8">
-  <script src="https://d3js.org/d3.v6.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
-  <title>UBC Mathematics Undergraduate Program</title>
-  <style>
-    #dashboard { border: 1px solid black; height: 600px; display: inline-block; width: 1400px; font-family: sans-serif; font-size: 10pt; }
-    #infobox { display: inline-block; width: 400px; height: 600px; }
-    #infobox div { margin: 20px 0px 0px 20px; }
-    #coursemap { position: absolute; display: inline-block; height: 600px; }
-  </style>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
+    <title>UBC Mathematics Undergraduate Program</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 
 <body>
 
-  <div id="dashboard">
-    <div id="infobox"></div>
-    <div id="coursemap"></div>
-  </div>
+    <div id="dashboard">
+        <div id="infobox"></div>
+        <div id="coursemap"></div>
+    </div>
 
-  <script type="text/javascript">
+    <script type="text/javascript">
+        // Map is 18 x 10
+        const width = 1000,
+            height = width / 1.8,
+            scale = width / 18;
+        Promise.all([
+            d3.csv("data/csv/LayoutCourses.csv"),
+            d3.csv("data/csv/LayoutRequisites.csv"),
+            d3.csv("data/csv/Courses.csv"),
+            d3.csv("data/csv/Tracks.csv"),
+            d3.csv("data/csv/CoursesTracks.csv"),
+            d3.csv("data/csv/Requisites.csv"),
+            d3.csv("data/csv/Exclusions.csv"),
+            d3.csv("data/csv/CoursesExclusions.csv"),
+            d3.csv("data/csv/Layout1Courses.csv"),
+            d3.csv("data/csv/Layout1Requisites.csv"),
+        ]).then(function(files) {
+            const courses = files[0];
+            const requisites = files[1];
+            const coursesInfo = files[2];
+            const tracks = files[3];
+            const tracksinfo = files[4];
+            const requisitesInfo = files[5];
+            const exclusionsinfo = files[6];
+            const exclusions = files[7];
+            const courses1 = files[8];
+            const requisites1 = files[9];
 
-  Promise.all([
-    d3.csv("data/csv/LayoutCourses.csv"),
-    d3.csv("data/csv/LayoutRequisites.csv"),
-    d3.csv("data/csv/Courses.csv"),
-    d3.csv("data/csv/Requisites.csv")
-  ]).then(function(files) {
+            var svg = d3.select("#coursemap").append("svg").attr("width", width).attr("height", height);
 
-    const courses = files[0];
-    const requisites = files[1];
-    const coursesInfo = files[2];
-    const requisitesInfo = files[3];
+            var layout_cur = -1; //current layout
+            // add layout switch button
+            var l_button = d3.select("#dashboard").append("g");
+            var l0_button = l_button.append("div").attr("class", "layout_buttons").attr("id", 0)
+                .style("transform", "translate(0px, " + 100 + "px)")
+                .on("click", function() {
+                    switchlayout(d3.select(this), layout_cur, courses, requisites, coursesInfo, requisitesInfo, exclusionsinfo, exclusions);
+                    layout_cur = 0;
+                })
+                .html("Layout 1");
 
-    // Map is 18 x 10
-    var width = 1000, height = width/1.8, scale = width/18;
-    var xcoord = x => x * scale + width / 2;
-    var ycoord = y => height - y * scale - 1.5*scale;
+            var l1_button = l_button.append("div").attr("class", "layout_buttons").attr("id", 1)
+                .style("transform", "translate(0px, " + 110 + "px)")
+                .on("click", function() {
+                    switchlayout(d3.select(this), layout_cur, courses1, requisites1, coursesInfo, requisitesInfo, null, null);
+                    layout_cur = 1;
+                })
+                .html("Layout 2");
 
-    var svg = d3.select("#coursemap").append("svg").attr("width", width).attr("height", height);
+            switchlayout(l0_button, layout_cur, courses, requisites, coursesInfo, requisitesInfo, exclusionsinfo, exclusions);
+            layout_cur = 0;
+        });
 
-    // Requisite lines
-    var req_lines = svg.append("g")
-      .selectAll("line")
-      .data(requisites)
-      .join("line")
-      .attr("x1", requisite => xcoord(requisite.course_x))
-      .attr("y1", requisite => ycoord(requisite.course_y))
-      .attr("x2", requisite => xcoord(requisite.requisite_x))
-      .attr("y2", requisite => ycoord(requisite.requisite_y))
-      .attr("stroke","black")
-      .attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
 
-    // Course nodes
-    svg.append("g")
-      .selectAll("circle")
-      .data(courses)
-      .join("circle")
-      .attr("r", 9)
-      .attr("cx", course => xcoord(course.x))
-      .attr("cy", course => ycoord(course.y))
-      .attr("fill","white")
-      .attr("stroke","black");
+        function switchlayout(d, layout_cur, courses, requisites, coursesinfo, reqinfo, exclusionsinfo, exclusions) {
+            if (d.attr("id") != layout_cur) {
+                cleancourses();
+                addlines(requisites);
+                addcourses(courses, coursesinfo, reqinfo, exclusions, exclusionsinfo);
+                updateLinesPos();
+                const state = d.classed("layout_buttons_active");
+                d.classed("layout_buttons_active", !state);
+                d3.selectAll(".layout_buttons").filter(function(d) {
+                        return d3.select(this).attr("id") == layout_cur;
+                    })
+                    .classed("layout_buttons_active", false);
+            }
+        }
 
-    // Course numbers
-    svg.append("g")
-      .selectAll("text")
-      .data(courses)
-      .join("text")
-      .attr("x", course => xcoord(course.x))
-      .attr("y", course => ycoord(course.y))
-      .attr("text-anchor","middle")
-      .attr("dy","2.5px")
-      .attr("font-color","black")
-      .attr("font-family","Arial")
-      .attr("font-size", 8)
-      .text(d => d.course_number);
+        function addlines(requisite) {
+            var lines = d3.select("#coursemap").select("svg")
+                .append("g") // group lines so it's easy to debug through the browser, not necessary
+                .attr("class", "lines")
+                .selectAll("line")
+                .data(requisite);
+            lines
+                .join("line")
+                .attr("course", (requisite) => requisite.course_number)
+                .attr("pre", (requisite) => requisite.requisite_number)
+                .attr("class", "pre_line")
+                .attr("stroke", "black")
+                .attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
+        }
 
-    // Transparent course nodes for mouse over effect displaying course info
-    svg.append("g")
-      .selectAll("circle")
-      .data(courses)
-      .join("circle")
-      .attr("r", 9)
-      .attr("cx", course => xcoord(course.x))
-      .attr("cy", course => ycoord(course.y))
-      .style("opacity","0")
-      .on("mouseover", showCourseInfo)
-      .on("mouseout", hideCourseInfo);
+        function addcourses(courses_data, coursesinfo, reqinfo, exclusions, exclusionsinfo) {
+            var xcoord = (x) => x * scale + width / 2;
+            var ycoord = (y) => height - 30 - y * scale;
 
-    // Course information template
-    var courseInfoDiv = d3.select("#infobox").append("div").style("display","none");
-    var courseInfoString = `<h2>MATH <%= number %></h2>
-                            <h3><%= title %></h3>
-                            <p><%= description %></p>
-                            <% if (prereqs.length > 0) { %>
-                              <h4>Prerequisites</h4>
-                              <ul><% _.each(prereqs, function(prereq) { %><li><%= prereq.description %></li><% }); %></ul>
-                            <% }; %>
-                            <% if (coreqs.length > 0) { %>
-                              <h4>Corequisites</h4>
-                              <ul><% _.each(coreqs, function(coreq) { %><li><%= coreq.description %></li><% }); %></ul>
-                            <% }; %>`
-    var courseInfoTemplate = _.template(courseInfoString);
+            var nodes = d3.select("#coursemap").select("svg")
+                .append("g") // group nodes so it's easy to debug through the browser
+                .attr("class", "nodes")
+                .selectAll("g")
+                .data(courses_data)
+                .join("g")
+                .attr("id", (course) => course.course_number)
+                .attr("class", "node")
+                .attr("request-send", false) // to avoid repetitively requesting for syllabus url
+                .attr("syllabus-link", "") // store the url 
+                .style("pointer-events", "all") // group node and corresponding text together so we no longer need transparent nodes
+                .on("mouseover", function(event, d) {
+                    showCourseInfo(event, d3.select(this), coursesinfo, reqinfo);
+                })
+                .on("mouseout", function(event, d) {
+                    hideCourseInfo(event, d3.select(this));
+                });
 
-    function showCourseInfo (event,course) {
-      var courseInfo = coursesInfo.find(d => d.number == course.course_number);
-      var requisiteInfo = requisitesInfo.filter(r => r.course_number == course.course_number);
-      var courseInfoObject = {"number": courseInfo.number,
-                              "title": courseInfo.title,
-                              "description": courseInfo.description,
-                              "prereqs": requisiteInfo.filter(r => r.type == "pre"),
-                              "coreqs": requisiteInfo.filter(r => r.type == "co")};
-      courseInfoDiv.html(courseInfoTemplate(courseInfoObject)).style("display","block");
-      req_lines.filter(requisite => requisite.course_number == course.course_number).attr("opacity", 1);
-    };
+            nodes
+                .append("circle")
+                .attr("class", "course")
+                .attr("id", (course) => course.course_number)
+                .attr("cx", (course) => xcoord(course.x))
+                .attr("cy", (course) => ycoord(course.y));
 
-    function hideCourseInfo (event,course) {
-      courseInfoDiv.html("").style("display","none");
-      req_lines.filter(requisite => requisite.course_number == course.course_number)
-        .attr("opacity", requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
-    };
+            nodes
+                .append("text")
+                .attr("id", (course) => course.course_number)
+                .attr("x", (course) => xcoord(course.x))
+                .attr("y", (course) => ycoord(course.y))
+                .attr("dy", "2.5px")
+                .attr("text-anchor", "middle")
+                .attr("font-color", "black")
+                .attr("font-family", "Arial")
+                .attr("font-size", 8)
+                .text((d) => d.course_number);
+        }
 
-  });
-  </script>
+
+        function cleancourses() {
+            d3.selectAll(".lines").remove();
+            d3.selectAll(".nodes").remove();
+        }
+
+        function updateLinesPos(c_num, x, y) {
+            d3.selectAll(".pre_line")
+                .each(function() {
+                    const course = d3.select(this).attr("course");
+                    const pre = d3.select(this).attr("pre");
+                    var line = d3.select(this);
+
+                    if (typeof c_num !== "undefined") { //if a course is specified, update lines for that course
+                        if (course == c_num) {
+                            line.attr("x1", x);
+                            line.attr("y1", y);
+                        } else if (pre == c_num) {
+                            line.attr("x2", x);
+                            line.attr("y2", y);
+                        }
+                    } else {
+                        // otherwise, update all lines for all courses
+                        d3.selectAll(".course").each(function(d) {
+                            const c_id = d3.select(this).attr("id");
+                            if (course == c_id) {
+                                line.attr("x1", d3.select(this).attr("cx"));
+                                line.attr("y1", d3.select(this).attr("cy"));
+                            } else if (pre == c_id) {
+                                line.attr("x2", d3.select(this).attr("cx"));
+                                line.attr("y2", d3.select(this).attr("cy"));
+                            }
+                        });
+                    }
+                });
+        }
+    </script>
+    <script src="js/infobox.js"></script>
 </body>
+
 </html>

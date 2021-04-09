@@ -9,13 +9,13 @@ function clickcircle(event, d) {
             c_status = d3.select(this).classed("course_click");
             if (!c_status) {
                 d3.select(this).classed("course_click", true);
-                d3.select(this.parentNode).select("text").attr("fill", "white");
+                d3.select(this.parentNode).select("text").classed("text_click", true);
                 d3.selectAll(".pre_line").filter(function(d) {
                     return d3.select(this).attr("course") == course_num;
                 }).classed(".line_click", true);
             } else {
                 d3.select(this).classed("course_click", false);
-                d3.select(this.parentNode).select("text").attr("fill", "black");
+                d3.select(this.parentNode).select("text").classed("text_click", false);
                 d3.selectAll(".pre_line").filter(function(d) {
                     return d3.select(this).attr("course") == course_num;
                 }).each(function(d) {

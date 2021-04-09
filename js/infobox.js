@@ -37,7 +37,7 @@ function showCourseInfo(event, course, coursesInfo, requisitesInfo) {
         return d3.select(this).attr("course") == course_num;
     }).attr("opacity", 1);
     course.select(".course").classed("course_hover", true);
-    course.select("text").attr("fill", "white");
+    course.select("text").classed("text_hover", true);
 
     // search for url, our program will only try it once 
     // once we get the url, it will be stored into the element as an attribute
@@ -64,9 +64,7 @@ function hideCourseInfo(event, course) {
         }
     });
     course.select(".course").classed("course_hover", false);
-    if (!course.select(".course").classed("course_click")) {
-        course.select("text").attr("fill", "black");
-    }
+    course.select("text").classed("text_hover", false);
 };
 
 // display the link to the syllabus only if it's valid

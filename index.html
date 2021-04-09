@@ -119,6 +119,7 @@
                 .style("font", "11px 	Arial")
                 .style("font-weight", "bold");
 
+
             switchlayout(l0_button, layout_cur, courses, requisites, coursesInfo, requisitesInfo, exclusionsinfo, exclusions);
             layout_cur = 0;
         });
@@ -204,6 +205,7 @@
 
             nodes
                 .append("text")
+                .attr("class", "course_text")
                 .attr("id", (course) => course.course_number)
                 .attr("x", (course) => xcoord(course.x))
                 .attr("y", (course) => ycoord(course.y))

@@ -49,11 +49,31 @@
     fill: #000;
 }
 
+.course_program {
+    fill: #000;
+}
+
 .course_click {
     fill: #000;
 }
 
+.text_hover {
+    fill: #fff;
+}
+
+.text_click {
+    fill: #fff;
+}
+
+.text_program {
+    fill: #fff;
+}
+
 .line_click {
+    opacity: 1;
+}
+
+.line_program {
     opacity: 1;
 }
 

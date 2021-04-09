@@ -66,58 +66,63 @@
                 })
                 .html("Layout 2");
 
-            // add descriptions in the top-right
-            var notes = svg.append("g").attr("class", "notes");
-            // note1: click a course to mark it
-            var note1 = notes
-                .append("g")
-                .style("transform", "translate(" + (width - 225) + "px, 31px)");
-            note1
-                .append("polygon")
-                .attr("points", "0,9 5,0 10,9");
-            note1_text = note1
-                .append("text")
-                .attr("x", 15)
-                .attr("y", 10)
-            note1_text.append('tspan').attr("textLength", 200).text("Click a course to mark it.");
-
-            // note2: drag and reset
-            var note2 = notes
-                .append("g")
-                .style("transform", "translate(" + (width - 225) + "px, 51px)");
-            note2
-                .append("polygon")
-                .attr("points", "0,9 5,0 10,9");
-            var note2_text = note2
-                .append("text")
-                .attr("x", 15)
-                .attr("y", 10);
-            // This is silly, I know, as svg.text do not support auto line break. 
-            // One may prefer div-p. However, that will cause an overlap bug when one drags a circle laying above the text.
-            // We do have some alternative ways. But as notes are usually short, I'd rather manually break lines.
-            note2_text.append("tspan").attr("textLength", 200).text("Drag courses to make your own");
-            note2_text.append("tspan").attr("x", 15).attr("dy", "1.2em").text("collection. Click");
-            note2_text.append("tspan").attr("x", 165).text("to reset.");
-            var reset_button = note2
+            // add track panel in the top-left
+            var g = svg
                 .append("g")
                 .style("pointer-events", "all")
-                .on("click", function() {
-                    resetdrag_1(d3.select(this), exclusions);
+                .on("click", clickdropdown);
+            var drop_menu = g
+                .append("foreignObject")
+                .attr("class", "drop_menu")
+                .attr("x", 50)
+                .attr("y", 25);
+            var menu_button = drop_menu
+                .append("xhtml:div")
+                .append("div")
+                .attr("class", "drop_button");
+            menu_button.append("p").style("font-size", "11px").html("Track Your Interest Here!");
+            // small star
+            g.append("polygon")
+                .attr("class", "star")
+                .attr("points", "10,1 4,20 19,8 1,8 16,20");
+            // button for each track
+            var track_button = svg
+                .append("g")
+                .attr("class", "tracks")
+                .selectAll("rect")
+                .data(tracks)
+                .join("g")
+                .attr("class", "track_panel")
+                .attr("id", (t) => t.id)
+                .attr("visibility", "hidden")
+                .style("pointer-events", "all")
+                .on("click", function(d) {
+                    selecttrack(d3.select(this), tracksinfo);
                 });
-            reset_button
+            track_button
                 .append("rect")
-                .attr("class", "reset_button")
-                .attr("x", 120)
-                .attr("y", 14);
-            reset_button
+                .attr("id", (t) => t.id)
+                .attr("class", "track_button")
+                .attr("x", 50)
+                .attr("y", function(t) {
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height - 5;
+                });
+            track_button
                 .append("text")
-                .attr("class", "reset_text")
-                .text("Here")
-                .attr("textLength", 25)
-                .attr("x", 125)
-                .attr("y", 26)
-                .style("font", "11px 	Arial")
-                .style("font-weight", "bold");
+                .attr("x", 50)
+                .attr("id", (t) => t.id)
+                .attr("class", "track_title")
+                .attr("font-size", 13)
+                .attr("y", function(t) {
+                    return t.id * 30 + d3.select(".drop_button").node().getBoundingClientRect().height + 15;
+                })
+                .attr("textLength", function(t) {
+                    var title = t.title;
+                    if (title.length >= 30) return "200";
+                    else return;
+                })
+                .text((d) => d.title);
+
 
 
             switchlayout(l0_button, layout_cur, courses, requisites, coursesInfo, requisitesInfo, exclusionsinfo, exclusions);
@@ -137,6 +142,9 @@
                         return d3.select(this).attr("id") == layout_cur;
                     })
                     .classed("layout_buttons_active", false);
+                d3.selectAll(".track_button").each(function(d) {
+                    d3.select(this).classed("track_button-tracking", false);
+                });
             }
         }
 
@@ -178,23 +186,7 @@
                 })
                 .on("mouseout", function(event, d) {
                     hideCourseInfo(event, d3.select(this));
-                })
-                .on("click", function(event, d) {
-                    clickcircle(event, d3.select(this));
-                })
-                .call(
-                    d3
-                    .drag()
-                    .on("start", function(event, d) {
-                        setiniposition(d3.select(this));
-                    })
-                    .on("drag", function(event, d) {
-                        dragcircle(event, d3.select(this));
-                    })
-                    .on("end", function(event, d) {
-                        setiniposition(d3.select(this));
-                    })
-                );
+                });
 
             nodes
                 .append("circle")
@@ -253,7 +245,7 @@
         }
     </script>
     <script src="js/infobox.js"></script>
-    <script src="js/drag.js"></script>
+    <script src="js/track.js"></script>
 </body>
 
 </html>

@@ -1,0 +1,43 @@
+body,html {
+  margin: 0px;
+}
+
+#dashboard {
+  display: grid;
+  grid-template-columns: 400px auto 200px;
+  border: 1px solid black;
+  font-family: sans-serif;
+  font-size: 10pt;
+}
+
+#courseinfobox {
+  grid-column: 1;
+  grid-row: 1;
+  padding: 0 20px;
+}
+
+#courseinfobox ul {
+  padding-left: 2em;
+}
+
+#coursemap {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+}
+
+#trackinfobox {
+  grid-column: 3;
+  grid-row: 1;
+  padding: 0 20px;
+  text-align: center;
+}
+
+#trackinfobox div {
+  padding: 5px;
+}
+
+#trackinfobox div:hover {
+  cursor: default;
+  background-color: rgba(0,0,0,0.1);
+}

@@ -4,40 +4,57 @@ body,html {
 
 #dashboard {
   display: grid;
-  grid-template-columns: 400px auto 200px;
-  border: 1px solid black;
+  grid-template-columns: 33% 33% 34%;
+  grid-template-rows: 33% 33% 34%;
+  grid-gap: 2px;
   font-family: sans-serif;
   font-size: 10pt;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.2);
 }
 
-#courseinfobox {
+#dashboard > div {
+  background-color: white;
+}
+
+#program-track-nav {
   grid-column: 1;
   grid-row: 1;
   padding: 0 20px;
+  display: grid;
+  grid-template-columns: 40% 60%;
 }
 
-#courseinfobox ul {
-  padding-left: 2em;
-}
-
-#coursemap {
-  grid-column: 2;
-  grid-row: 1;
-  text-align: center;
-}
-
-#trackinfobox {
-  grid-column: 3;
-  grid-row: 1;
-  padding: 0 20px;
-  text-align: center;
-}
-
-#trackinfobox div {
+#program-nav div, #track-nav div {
   padding: 5px;
 }
 
-#trackinfobox div:hover {
+#program-nav div:hover, #track-nav div:hover {
   cursor: default;
   background-color: rgba(0,0,0,0.1);
+}
+
+#course-info {
+  grid-column: 1;
+  grid-row-start: 2;
+  grid-row-end: 4;
+  padding: 0 20px;
+}
+
+#course-info ul {
+  padding-left: 2em;
+}
+
+#course-map {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row-start: 1;
+  grid-row-end: 3;
+  text-align: center;
+}
+
+#program-track-info {
+  grid-column-start: 2;
+  grid-column-end: 4;
+  grid-row: 3;
 }

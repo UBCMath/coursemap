@@ -12,7 +12,18 @@
 
   <div id="dashboard">
 
-    <div id="courseinfobox">
+    <div id="program-track-nav">
+      <div id="program-nav">
+        <h2>Programs</h2>
+
+      </div>
+      <div id="track-nav">
+        <h2>Tracks</h2>
+
+      </div>
+    </div>
+
+    <div id="course-info">
       <div>
         <script id="course-info-string" type="text/template">
           <h2>MATH <%= number %></h2>
@@ -32,13 +43,17 @@
             <% }); %>
           </ul>
           <% }; %>
+          <% if (notes.length > 0) { %>
+          <h4>Notes</h4>
+          <p><%= notes %></p>
+          <% }; %>
         </script>
       </div>
     </div>
 
-    <div id="coursemap"><svg></svg></div>
+    <div id="course-map"><svg></svg></div>
 
-    <div id="trackinfobox"><h2>Programs</h2></div>
+    <div id="program-track-info"></div>
 
   </div>
 

@@ -4,12 +4,14 @@ d3.json("data/data.json").then(function(data) {
   const courses = data.courses;
   const requisites = data.requisites;
   const layouts = data.layouts;
+  const tracks = data.tracks;
 
-  var width = parseInt(d3.select("#coursemap").style("width"));
-  var height = width/1.8, scale = width/18;
+  var width = parseInt(d3.select("#course-map").style("width"));
+  var height = parseInt(d3.select("#course-map").style("height"));
+  var scale = Math.min(width/18,height/10);
   var xcoord = x => x * scale + width / 2;
   var ycoord = y => height - y * scale - 1.5*scale;
-  var svg = d3.select("#coursemap svg").attr("width",width).attr("height",height);
+  var svg = d3.select("#course-map svg").attr("width",width).attr("height",height);
 
   var requisiteLines = svg.append("g");
   var courseNodes = svg.append("g");
@@ -17,12 +19,15 @@ d3.json("data/data.json").then(function(data) {
   var infoNodes = svg.append("g");
   renderLayout(layouts[0]);
 
-  var courseInfoDiv = d3.select("#courseinfobox").select("div").style("display","none");
+  var courseInfoDiv = d3.select("#course-info").select("div").style("display","none");
   var courseInfoString = d3.select("#course-info-string").html();
   var courseInfoTemplate = _.template(courseInfoString);
 
-  var layoutDivs = d3.select("#trackinfobox").selectAll("div").data(layouts).join("div")
+  var programNav = d3.select("#program-nav").selectAll("div").data(layouts).join("div")
                      .html(layout => layout.name).on("click",(e,d) => renderLayout(d));
+
+  var trackNav = d3.select("#track-nav").selectAll("div").data(tracks).join("div")
+                   .html(track => track.name);
 
   function showCourseInfo (event,course) {
     var courseInfo = courses.find(d => d.number == course.course_number);
@@ -31,7 +36,8 @@ d3.json("data/data.json").then(function(data) {
                             "title": courseInfo.title,
                             "description": courseInfo.description,
                             "prereqs": requisiteInfo.filter(requisite => requisite.type == "pre"),
-                            "coreqs": requisiteInfo.filter(requisite => requisite.type == "co")};
+                            "coreqs": requisiteInfo.filter(requisite => requisite.type == "co"),
+                            "notes": courseInfo.notes};
     courseInfoDiv.html(courseInfoTemplate(courseInfoObject)).style("display","block");
     requisiteLines.selectAll("line").filter(requisite => requisite.course_number == course.course_number).attr("opacity",1);
   };

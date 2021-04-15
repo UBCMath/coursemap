@@ -25,7 +25,7 @@
 
     <div id="course-info">
       <div>
-        <script id="course-info-string" type="text/template">
+        <script id="course-info-template" type="text/template">
           <h2>MATH <%= number %></h2>
           <h3><%= title %></h3>
           <p><%= description %></p>
@@ -53,7 +53,12 @@
 
     <div id="course-map"><svg></svg></div>
 
-    <div id="program-track-info"></div>
+    <div id="program-info">
+      <script id="program-info-template" type="text/template">
+        <h2><%= name %></h2>
+        <p><%= description %></p>
+      </script>
+    </div>
 
   </div>
 

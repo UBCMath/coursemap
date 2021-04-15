@@ -1,9 +1,9 @@
 d3.json("data/data.json").then(function(data) {
-  const coursesLayout = data.courses_layout1;
-  const requisitesLayout = data.requisites_layout1;
+  const coursesProgram = data.courses_program1;
+  const requisitesProgram = data.requisites_program1;
   const courses = data.courses;
   const requisites = data.requisites;
-  const layouts = data.layouts;
+  const programs = data.programs;
   const tracks = data.tracks;
 
   var width = parseInt(d3.select("#course-map").style("width"));
@@ -17,18 +17,26 @@ d3.json("data/data.json").then(function(data) {
   var courseNodes = svg.append("g");
   var courseNumbers = svg.append("g");
   var infoNodes = svg.append("g");
-  renderLayout(layouts[0]);
+
+  var programNav = d3.select("#program-nav").selectAll("div").data(programs).join("div")
+                     .html(program => program.name)
+                     .on("click", function (e,d) {
+                       renderProgram(d);
+                       showProgramInfo(d);
+                     });
+  var trackNav = d3.select("#track-nav").selectAll("div").data(tracks).join("div")
+                   .html(track => track.name).on("click",(e,d) => showProgramInfo(d));
+
+  var programInfoDiv = d3.select("#program-info");
+  var programInfoHTML = d3.select("#program-info-template").html();
+  var programInfoTemplate = _.template(programInfoHTML);
+  function showProgramInfo (program) {
+    programInfoDiv.html(programInfoTemplate(program));
+  };
 
   var courseInfoDiv = d3.select("#course-info").select("div").style("display","none");
-  var courseInfoString = d3.select("#course-info-string").html();
-  var courseInfoTemplate = _.template(courseInfoString);
-
-  var programNav = d3.select("#program-nav").selectAll("div").data(layouts).join("div")
-                     .html(layout => layout.name).on("click",(e,d) => renderLayout(d));
-
-  var trackNav = d3.select("#track-nav").selectAll("div").data(tracks).join("div")
-                   .html(track => track.name);
-
+  var courseInfoHTML = d3.select("#course-info-template").html();
+  var courseInfoTemplate = _.template(courseInfoHTML);
   function showCourseInfo (event,course) {
     var courseInfo = courses.find(d => d.number == course.course_number);
     var requisiteInfo = requisites.filter(r => r.course_number == course.course_number);
@@ -47,24 +55,24 @@ d3.json("data/data.json").then(function(data) {
                   .attr("opacity",requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
   };
 
-  function renderLayout (layout) {
-    var newCoursesLayout = data["courses_layout" + layout.id];
-    var newRequisitesLayout = data["requisites_layout" + layout.id];
+  function renderProgram (program) {
+    var newCoursesProgram = data["courses_program" + program.id];
+    var newRequisitesProgram = data["requisites_program" + program.id];
     const t = svg.transition().duration(750);
-    requisiteLines.selectAll("line").data(newRequisitesLayout,requisite => requisite.course_requisite_number)
+    requisiteLines.selectAll("line").data(newRequisitesProgram,requisite => requisite.course_requisite_number)
                   .join("line")
                   .transition(t)
                   .attr("x1",requisite => xcoord(requisite.course_x)).attr("y1",requisite => ycoord(requisite.course_y))
                   .attr("x2",requisite => xcoord(requisite.requisite_x)).attr("y2",requisite => ycoord(requisite.requisite_y))
                   .attr("stroke","black").attr("opacity",requisite => requisite.requisite_is_primary == 1 ? 0.2 : 0);
 
-    courseNodes.selectAll("circle").data(newCoursesLayout,course => course.course_number)
+    courseNodes.selectAll("circle").data(newCoursesProgram,course => course.course_number)
                .join("circle")
                .transition(t)
                .attr("cx",course => xcoord(course.x)).attr("cy",course => ycoord(course.y))
                .attr("r",9).attr("fill","white").attr("stroke","black");
 
-    courseNumbers.selectAll("text").data(newCoursesLayout,d => d.course_number)
+    courseNumbers.selectAll("text").data(newCoursesProgram,d => d.course_number)
                  .join("text")
                  .transition(t)
                  .attr("x",course => xcoord(course.x)).attr("y",course => ycoord(course.y))
@@ -72,10 +80,14 @@ d3.json("data/data.json").then(function(data) {
                  .attr("font-color","black").attr("font-family","Arial").attr("font-size",8)
                  .text(d => d.course_number);
 
-    infoNodes.selectAll("circle").data(newCoursesLayout,d => d.course_number)
+    infoNodes.selectAll("circle").data(newCoursesProgram,d => d.course_number)
              .join("circle")
              .attr("r", 9).style("opacity","0").on("mouseover",showCourseInfo).on("mouseout",hideCourseInfo)
              .transition(t)
              .attr("cx",course => xcoord(course.x)).attr("cy",course => ycoord(course.y));
   };
+
+  renderProgram(programs[0]);
+  showProgramInfo(programs[0]);
+
 });

@@ -33,11 +33,17 @@ body,html {
 #program-nav div, #track-nav div {
   padding: 5px;
   margin-right: 10px;
+  border: 1px solid white;
+  border-radius: 2px;
 }
 
 #program-nav div:hover, #track-nav div:hover {
   cursor: default;
   background-color: rgba(0,0,0,0.1);
+}
+
+#program-nav div.highlight, #track-nav div.highlight {
+  border-color: black;
 }
 
 #course-info {

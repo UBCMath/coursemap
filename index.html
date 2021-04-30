@@ -5,6 +5,8 @@
   <script src="https://d3js.org/d3.v6.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/underscore@1.12.0/underscore-min.js"></script>
   <link rel="stylesheet" type="text/css" href="main.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;700&display=swap" rel="stylesheet">
   <title>UBC Mathematics Undergraduate Program</title>
 </head>
 
@@ -12,22 +14,21 @@
 
   <div id="dashboard">
 
+    <header>
+      <h2>UBC Mathematics</h2>
+    </header>
+
     <div id="program-track-nav">
       <div id="program-nav">
-        <h2>Programs</h2>
-
       </div>
       <div id="track-nav">
-        <h2>Tracks</h2>
-
       </div>
     </div>
 
     <div id="course-info">
       <div>
         <script id="course-info-template" type="text/template">
-          <h2>MATH <%= number %></h2>
-          <h3><%= title %></h3>
+          <h3>MATH <%= number %> <%= title %></h3>
           <p><%= description %></p>
           <% if (prereqs.length > 0) { %>
           <h4>Prerequisites</h4>
@@ -54,12 +55,16 @@
     <div id="course-map"><svg></svg></div>
 
     <div id="program-info">
-      <div>
-        <script id="program-info-template" type="text/template">
+      <script id="program-info-template" type="text/template">
+        <div id="program-info1">
           <h2><%= name %></h2>
-          <p><%= description %></p>
-        </script>
-      </div>
+          <p><%= description1 %></p>
+        </div>
+        <div id="program-info2">
+          <h2 style="color: rgba(0,0,0,0);"><%= name %></h2>
+          <p><%= description2 %></p>
+        </div>
+      </script>
     </div>
 
   </div>

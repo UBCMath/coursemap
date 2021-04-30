@@ -5,8 +5,8 @@ d3.json("data/data.json").then(function(data) {
   const tracks = data.tracks;
   const coursesTracks = data.courses_tracks;
 
-  var width = parseInt(d3.select("#course-map").style("width"));
-  var height = parseInt(d3.select("#course-map").style("height"));
+  var width = parseInt(d3.select("#course-map").style("width")) - 20;
+  var height = parseInt(d3.select("#course-map").style("height")) - 20;
   var scale = Math.min(width/18,height/10);
   var xcoord = x => x * scale + width / 2;
   var ycoord = y => height - y * scale - 1.5*scale;
@@ -206,7 +206,7 @@ d3.json("data/data.json").then(function(data) {
     courseNodes.selectAll("circle")
       .attr("fill","white")
       .filter(course => courseList ? courseList.includes(course.course_number) : false)
-      .attr("fill","lightgrey");
+      .attr("fill","rgb(225,225,225)");
   };
 
   renderProgram(programs[0],0);

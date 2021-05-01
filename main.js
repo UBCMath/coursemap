@@ -211,5 +211,5 @@ d3.json("data/data.json").then(function(data) {
 
   renderProgram(programs[0],0);
   showInfo(programs[0]);
-
+  d3.select("#program-nav div:first-child").classed("highlight",true);
 });

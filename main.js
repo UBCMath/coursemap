@@ -11,6 +11,7 @@ d3.json("data/data.json").then(function(data) {
   var xcoord = x => x * scale + width / 2;
   var ycoord = y => height - y * scale - 1.5*scale;
   var svg = d3.select("#course-map svg").attr("width",width).attr("height",height);
+  var highlightColor1 = "rgb(225,225,225)";
 
   var requisiteLines = svg.append("g");
   var courseNodes = svg.append("g");
@@ -26,7 +27,7 @@ d3.json("data/data.json").then(function(data) {
       d3.select("#program-nav div.highlight").classed("highlight",false);
       d3.select("#track-nav div.highlight").classed("highlight",false);
       d3.select(this).classed("highlight",true);
-      renderProgram(program,750);
+      renderProgram(program,600);
       showInfo(program);
       highlight(null);
     });
@@ -109,6 +110,7 @@ d3.json("data/data.json").then(function(data) {
           .transition()
           .delay(2*duration).duration(duration)
           .style("opacity",1)
+          .attr("fill",course => course.required ? highlightColor1 : "white")
           .attr("stroke","black");
       },function (update) {
         update
@@ -117,11 +119,12 @@ d3.json("data/data.json").then(function(data) {
           .attr("cx",course => xcoord(course.x))
           .attr("cy",course => ycoord(course.y))
           .attr("opacity",1)
-          .attr("fill","white")
+          .attr("fill",course => course.required ? highlightColor1 : "white")
           .attr("stroke","black");
       },function (exit) {
         exit.transition()
           .duration(duration)
+          .attr("fill","white")
           .attr("stroke","rgba(0,0,0,0)")
           .attr("opacity",0)
           .remove();
@@ -204,9 +207,9 @@ d3.json("data/data.json").then(function(data) {
 
   function highlight (courseList) {
     courseNodes.selectAll("circle")
-      .attr("fill","white")
+      .attr("fill",course => course.required ? highlightColor1 : "white")
       .filter(course => courseList ? courseList.includes(course.course_number) : false)
-      .attr("fill","rgb(225,225,225)");
+      .attr("fill",highlightColor1);
   };
 
   renderProgram(programs[0],0);

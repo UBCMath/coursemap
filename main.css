@@ -23,7 +23,6 @@ body,html {
 
 #dashboard > div {
   background-color: white;
-  overflow: scroll;
 }
 
 header {
@@ -47,6 +46,7 @@ header h2 {
 
 #program-nav, #track-nav {
   padding: 10px;
+  overflow: scroll;
 }
 
 #program-nav div, #track-nav div {
@@ -87,6 +87,7 @@ header h2 {
   grid-row: 2;
   padding: 0px 15px;
   display: grid;
+  grid-template-columns: 50% 50%;
 }
 
 #program-info1 {

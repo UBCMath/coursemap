@@ -11,7 +11,7 @@ d3.json("data/data.json").then(function(data) {
   var xcoord = x => x * scale + width / 2;
   var ycoord = y => height - y * scale - 1.5*scale;
   var svg = d3.select("#course-map svg").attr("width",width).attr("height",height);
-  var highlightColor1 = "rgb(225,225,225)";
+  var highlightColor1 = "rgb(0, 85, 183)";
 
   var requisiteLines = svg.append("g");
   var courseNodes = svg.append("g");
@@ -42,7 +42,6 @@ d3.json("data/data.json").then(function(data) {
       d3.select(this).classed("highlight",true);
       var coursesTrack = coursesTracks.filter(d => d.track_id == track.track_id).map(d => d.course_number);
       highlight(coursesTrack);
-      showInfo(track);
     })
     .style("display","none");
 
@@ -111,16 +110,15 @@ d3.json("data/data.json").then(function(data) {
           .delay(2*duration).duration(duration)
           .style("opacity",1)
           .attr("fill",course => course.required ? highlightColor1 : "white")
-          .attr("stroke","black");
+          .attr("stroke",course => course.required ? highlightColor1 : "black");
       },function (update) {
         update
           .transition()
           .delay(duration).duration(duration)
           .attr("cx",course => xcoord(course.x))
           .attr("cy",course => ycoord(course.y))
-          .attr("opacity",1)
           .attr("fill",course => course.required ? highlightColor1 : "white")
-          .attr("stroke","black");
+          .attr("stroke",course => course.required ? highlightColor1 : "black");
       },function (exit) {
         exit.transition()
           .duration(duration)
@@ -139,20 +137,19 @@ d3.json("data/data.json").then(function(data) {
           .attr("y",course => ycoord(course.y))
           .attr("text-anchor","middle").attr("dy","2.5px")
           .attr("font-family","Arial").attr("font-size",8)
-          .attr("fill","black")
+          .attr("fill",course => course.required ? "white" : "black")
           .attr("opacity",0)
           .text(d => d.course_number)
           .transition()
           .delay(2*duration).duration(duration)
-          .attr("opacity",1)
-          .attr("fill","black");
+          .attr("opacity",1);
       },function (update) {
         update
+          .attr("fill",course => course.required ? "white" : "black")
           .transition()
           .delay(duration).duration(duration)
           .attr("x",course => xcoord(course.x))
-          .attr("y",course => ycoord(course.y))
-          .attr("fill","black");
+          .attr("y",course => ycoord(course.y));
       }, function (exit) {
         exit.transition()
           .duration(duration)
@@ -208,11 +205,17 @@ d3.json("data/data.json").then(function(data) {
   function highlight (courseList) {
     courseNodes.selectAll("circle")
       .attr("fill",course => course.required ? highlightColor1 : "white")
+      .attr("stroke",course => course.required ? highlightColor1 : "black")
       .filter(course => courseList ? courseList.includes(course.course_number) : false)
-      .attr("fill",highlightColor1);
+      .attr("fill",highlightColor1)
+      .attr("stroke",highlightColor1);
+    courseNumbers.selectAll("text")
+      .attr("fill",course => course.required ? "white" : "black")
+      .filter(course => courseList ? courseList.includes(course.course_number) : false)
+      .attr("fill","white");
   };
 
   renderProgram(programs[0],0);
   showInfo(programs[0]);
-  d3.select("#program-nav div:first-child").classed("highlight",true);
+  d3.select("#program-nav div:nth-child(1)").classed("highlight",true);
 });

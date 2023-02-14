@@ -41,6 +41,7 @@ d3.json("data/data.json").then(function(data) {
       d3.select("#track-nav div.highlight").classed("highlight",false);
       d3.select(this).classed("highlight",true);
       var coursesTrack = coursesTracks.filter(d => d.track_id == track.track_id).map(d => d.course_number);
+      showInfo(track);
       highlight(coursesTrack);
     })
     .style("display","none");

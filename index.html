@@ -11,22 +11,17 @@
 </head>
 
 <body>
-
+  
   <div id="dashboard">
 
-    <header>
+    <header id="header">
       <h2>UBC Mathematics</h2>
     </header>
-
+      
     <div id="program-track-nav">
-      <div id="program-nav">
-      </div>
-      <div id="track-nav">
-      </div>
     </div>
 
     <div id="course-info">
-      <div>
         <script id="course-info-template" type="text/template">
           <h3>MATH <%= number %> <%= title %></h3>
           <p><%= description %></p>
@@ -49,26 +44,69 @@
           <p><%= notes %></p>
           <% }; %>
         </script>
-      </div>
     </div>
 
     <div id="course-map"><svg></svg></div>
 
     <div id="program-info">
-      <script id="program-info-template" type="text/template">
-        <div id="program-info1">
+      <div id="program-info1">
+        <script id="program-info1-template" type="text/template">
           <h3><%= name %></h3>
           <p><%= description1 %></p>
-        </div>
-        <div id="program-info2">
-          <h3 style="color: rgba(0,0,0,0);"><%= name %></h3>
-          <p><%= description2 %></p>
-        </div>
-      </script>
+          <% if (typeof(courses) !== "undefined") { %>
+            <p>Courses: <%= courses %></p>
+          <% }; %>
+        </script>
+      </div>
+      
+      <div id="program-info2">
+        <script id="program-info2-template" type="text/template">
+          <% if (typeof(quote) !== "undefined") { %>
+            <img src="/img/<%= image %>" class="reflection">
+            <p style="text-align: center;"><em>"<%= quote %>"</em></p>
+          <% } else { %>
+            <img src="/img/ubc.png" class="reflection">
+          <% }; %>
+        </script>
+      </div>
+
+      <div id="show-more">Show more +</div>
     </div>
-
+    
+    <div id="program-info-more">
+      <div id="program-info1-more">
+        <script id="program-info1-more-template" type="text/template">
+          <h3><%= name %></h3>
+          <p><%= description1 %></p>
+          <% if (typeof(courses) !== "undefined") { %>
+            <p>Courses: <%= courses %></p>
+            <p>Suggested courses from other departments: <%= suggested %></p>
+          <% }; %>
+          <p><%= description2 %></p>
+        </script>
+      </div>
+      
+      <div id="program-info2-more">
+        <script id="program-info2-more-template" type="text/template">
+          <% if (typeof(quote) !== "undefined") { %>
+            <img src="/img/<%= image %>" class="reflection">
+            <p style="text-align: center;"><em>"<%= quote %>"</em></p>
+            <p>Name: <%= name %></p>
+            <p>Degree: <%= degrees %></p>
+            <p>Currently: <%= currently %></p>
+            <p>Most relevant courses: <%= courses %></p>
+            <p>Reflection: <%= reflection %></p>
+          <% } else { %>
+            <img src="/img/ubc.png" class="reflection">
+          <% }; %>
+        </script>
+      </div>
+        
+      <div id="show-less">Show less -</div>
+    </div>
+  
   </div>
-
+  
   <script src="main.js"></script>
 
 </body>

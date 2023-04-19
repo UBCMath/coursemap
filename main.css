@@ -51,7 +51,7 @@ h3, h4 {
 #dashboard {
   display: grid;
   grid-template-columns: 35% 65%;
-  grid-template-rows: 5vh 35vh 60vh;
+  grid-template-rows: 5vh max(275px,38vh) 57vh;
   column-gap: 0px;
   row-gap: 0px;
   width: max(100vw,1200px);

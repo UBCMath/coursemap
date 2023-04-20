@@ -120,7 +120,7 @@ h3, h4 {
   grid-row-start: 2;
   grid-row-end: 4;
   grid-column: 2;
-  overflow: scroll;
+  overflow: auto;
   display: grid;
   z-index: -1;
 }

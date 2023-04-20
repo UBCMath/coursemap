@@ -69,7 +69,7 @@ h3, h4 {
   padding: 10px;
   border: 1px solid var(--light);
   border-radius: 2px;
-  overflow: scroll;
+  overflow: auto;
 }
 
 #program-track-nav div {
@@ -96,7 +96,7 @@ h3, h4 {
   grid-column: 1;
   margin: 0px 10px 10px 10px;
   padding: 15px 15px 10px 15px;
-  overflow: scroll;
+  overflow: auto;
   border: 1px solid var(--light);
   border-radius: 2px;
 }
@@ -112,7 +112,7 @@ h3, h4 {
 #program-info {
   grid-row: 2;
   grid-column: 2;
-  overflow: scroll;
+  overflow: auto;
   display: grid;
 }
 
@@ -136,20 +136,15 @@ h3, h4 {
   grid-row: 1;
   grid-column: 1;
   padding: 15px 15px 0px 15px;
+  overflow: auto;
 }
 
 #program-info2, #program-info2-more {
   grid-row: 1;
   grid-column: 2;
   padding: 25px 15px 0px 15px;
-}
+  overflow: auto;
 
-#program-info1, #program-info2 {
-  overflow: clip;
-}
-
-#program-info1-more, #program-info2-more {
-  overflow: scroll;
 }
 
 img.reflection {

@@ -55,7 +55,6 @@ d3.json("data/data.json").then(function(data) {
       programInfo2Div.html(programInfo2Template(reflection));
       programInfo1MoreDiv.html(programInfo1MoreTemplate(program));
       programInfo2MoreDiv.html(programInfo2MoreTemplate(reflection));
-      console.log(programInfo1MoreDiv.html());
     });
     tracks.filter(d => d.program_id == program.program_id).forEach(function(track){
       programNav.append("div").classed("track",true).html(track.name).on("click", function (event) {

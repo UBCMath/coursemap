@@ -94,7 +94,7 @@ d3.json("data/data.json").then(function(data) {
   function renderProgram (program,courseList,duration) {
     var course0 = {"number": "",
                    "title": "Course Information",
-                   "description": "The course map presents all MATH courses along with prerequisite/corequisite connections. Hover over a course to view the course description, a complete list of prerequisites/corequisites, credit exclusions and notes. Select progams and streams in the menu above.",
+                   "description": "The course map presents all MATH courses along with prerequisite/corequisite connections. Hover over a course to view the course description, a complete list of prerequisites/corequisites, credit exclusions and notes. Select progams and streams in the menu above.<br><br>The course map was created by <a href='https://patrickwalls.github.io/'>Patrick Walls</a> with contributions from <a href='https://github.com/zzzzzyzzzzz'>Karen Zhou</a> and <a href='https://github.com/LeoLee5566'>Wuyang Li</a>.<br><br><a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'><img alt='Creative Commons Licence' style='border-width:0' src='https://i.creativecommons.org/l/by-nc-sa/4.0/88x31.png' /></a><br />This work is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-nc-sa/4.0/'>Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.",
                    "prereqs": [],
                    "coreqs": [], 
                    "notes": ""};
